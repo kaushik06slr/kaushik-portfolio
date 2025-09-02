@@ -30,3 +30,24 @@
   --sh-property: #73daca;
   --sh-entity: #e0af68;
 }
+
+/* --- Social Link Hover Styles --- */
+
+/* Add a common class to all your social links for the transition effect */
+.social-link {
+  transition: background-color 0.3s ease;
+}
+/* Twitter / X */
+.social-link[href*="twitter.com"]:hover {
+  background-color: #1DA1F2 !important; /* Twitter Blue */
+}
+
+/* LinkedIn */
+.social-link[href*="linkedin.com"]:hover {
+  background-color: #0A66C2 !important; /* LinkedIn Blue */
+}
+
+/* Instagram */
+.social-link[href*="instagram.com"]:hover {
+  background-color: #E4405F !important; /* Instagram Pink */
+}
