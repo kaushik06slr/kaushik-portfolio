@@ -42,7 +42,7 @@ id: 'project1',
 export const WORK_EXPERIENCE: WorkExperience[] = [
   {
     company: 'Appian Corporation',
-    title: 'Senior User Experience Designer',
+    title: 'Senior UX Designer',
     start: 'April 2023',
     end: 'Present',
     link: 'https://appian.com',
