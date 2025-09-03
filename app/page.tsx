@@ -1,6 +1,7 @@
 'use client'
 import { motion } from 'motion/react'
 import { XIcon } from 'lucide-react'
+import Image from 'next/image';
 import { Spotlight } from '@/components/ui/spotlight'
 import { Magnetic } from '@/components/ui/magnetic'
 import {
@@ -19,6 +20,7 @@ import {
   EMAIL,
   SOCIAL_LINKS,
 } from './data'
+import { TextEffect } from '@/components/ui/text-effect'
 
 const VARIANTS_CONTAINER = {
   hidden: { opacity: 0 },
@@ -136,10 +138,15 @@ export default function Personal() {
         transition={TRANSITION_SECTION}
       >
         <div className="flex-1">
-          <p className="text-zinc-600 dark:text-zinc-400">
-            Focused on creating intuitive and performant web experiences.
-            Bridging the gap between design and development.
-          </p>
+          <TextEffect
+          as="p"
+          preset="fade"
+          per="char"
+          className="text-zinc-500 dark:text-zinc-500 tracking-normal text-base text-justify"
+          delay={0}
+        >
+          Hello, I'm a Product Designer from Chennai with over 5 years of experience turning complexity into clarity. My work spans low-code/no-code platforms and fintech, where I focus on building intuitive, scalable solutions rooted in systems thinking. Outside of work, I enjoy photography — it allows me to capture diverse perspectives and fuels the creativity I bring into design.
+        </TextEffect>
         </div>
       </motion.section>
 
@@ -147,28 +154,36 @@ export default function Personal() {
         variants={VARIANTS_SECTION}
         transition={TRANSITION_SECTION}
       >
-        <h3 className="mb-5 text-lg font-medium">Selected Projects</h3>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <h3 className="mb-5 text-lg font-medium">Selected Project</h3>
+        <div className="flex flex-col space-y-2">
           {PROJECTS.map((project) => (
-            <div key={project.name} className="space-y-2">
-              <div className="relative rounded-2xl bg-zinc-50/40 p-1 ring-1 ring-zinc-200/50 ring-inset dark:bg-zinc-950/40 dark:ring-zinc-800/50">
-                <ProjectVideo src={project.video} />
-              </div>
-              <div className="px-1">
-                <a
-                  className="font-base group relative inline-block font-[450] text-zinc-900 dark:text-zinc-50"
-                  href={project.link}
-                  target="_blank"
-                >
-                  {project.name}
-                  <span className="absolute bottom-0.5 left-0 block h-[1px] w-full max-w-0 bg-zinc-900 dark:bg-zinc-50 transition-all duration-200 group-hover:max-w-full"></span>
-                </a>
-                <p className="text-base text-zinc-600 dark:text-zinc-400">
-                  {project.description}
-                </p>
-              </div>
-            </div>
-          ))}
+  <div key={project.name} className="flex items-start gap-6 w-full group">
+    {/* Left Side: Thumbnail */}
+    <div className="relative w-1/3 shrink-0 overflow-hidden rounded-lg">
+      <a href={project.link} target="_blank" rel="noopener noreferrer" className="block">
+        <Image
+          src={project.image}
+          alt={`Thumbnail for ${project.name}`}
+          width={400}
+          height={250}
+          className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+        />
+      </a>
+    </div>
+
+    {/* Right Side: Content */}
+    <div className="w-2/3">
+      <a href={project.link} target="_blank" rel="noopener noreferrer">
+        <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-50">
+          {project.name}
+        </h3>
+      </a>
+      <p className="mt-1 text-zinc-400">
+        {project.description}
+      </p>
+    </div>
+  </div>
+))}
         </div>
       </motion.section>
 
@@ -245,6 +260,7 @@ export default function Personal() {
           </AnimatedBackground>
         </div>
       </motion.section>
+
 
       <motion.section
         variants={VARIANTS_SECTION}

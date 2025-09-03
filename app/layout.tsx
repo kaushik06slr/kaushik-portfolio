@@ -1,5 +1,9 @@
 import type { Metadata, Viewport } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { DM_Serif_Display, Geist, Geist_Mono } from 'next/font/google'
+import localFont from 'next/font/local';
+const inter = localFont({
+  src: './fonts/DMSerifDisplay-Regular.ttf', // Path to your font file
+});
 import './globals.css'
 import { Header } from './header'
 import { Footer } from './footer'
@@ -8,19 +12,18 @@ import { ThemeProvider } from 'next-themes'
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#ffffff',
+  themeColor: '#FBFFFD',
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://nim-fawn.vercel.app/'),
+  metadataBase: new URL('https://kaushikr.vercel.app/'),
   alternates: {
     canonical: '/'
   },
   title: {
-    default: 'Nim - Personal website template',
-    template: '%s | Nim'
+    default: 'Kaushik',
+    template: '%s | Kaushik'
   },
-  description:  'Nim is a free and open-source personal website template built with Next.js 15, React 19 and Motion-Primitives.',
 };
 
 const geist = Geist({
