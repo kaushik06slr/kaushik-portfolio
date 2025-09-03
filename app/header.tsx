@@ -16,7 +16,7 @@ export function Header() {
     className="rounded-md object-contain" 
   />
 </div>  */}
-        <Link href="/" className="text-9xl font-bold tracking-wide text-center bg-gradient-to-r from-emerald-400 to-emerald-600 text-transparent bg-clip-text">
+        <Link href="/" className="text-7xl md:text-8xl lg:text-9xl font-bold tracking-wide text-center bg-gradient-to-r from-emerald-400 to-emerald-600 text-transparent bg-clip-text">
           Kaushik
         </Link>
       </div>
