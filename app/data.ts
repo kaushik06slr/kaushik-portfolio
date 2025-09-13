@@ -14,6 +14,7 @@ type WorkExperience = {
   end: string
   link: string
   id: string
+  logo: string
 }
 
 type BlogPost = {
@@ -47,6 +48,7 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     end: 'Present',
     link: 'https://appian.com',
     id: 'work1',
+    logo: '/appian-logo.png',
   },
   {
     company: 'Mr.Cooper',
@@ -55,6 +57,7 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     end: 'April 2023',
     link: 'https://mrcooper.com',
     id: 'work2',
+    logo: '/mrcooper-logo.png',
   },
 ]
 
