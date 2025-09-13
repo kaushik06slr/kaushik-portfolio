@@ -7,6 +7,7 @@ const inter = localFont({
 import './globals.css'
 import { Header } from './header'
 import { ThemeProvider } from 'next-themes'
+import { Analytics } from "@vercel/analytics/next"
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -58,6 +59,7 @@ export default function RootLayout({
             </div>
           </div>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )
