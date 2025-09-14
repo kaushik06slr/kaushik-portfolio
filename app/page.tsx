@@ -11,6 +11,7 @@ import {
   BLOG_POSTS,
   EMAIL,
   SOCIAL_LINKS,
+  PROJECTS,
 } from './data'
 
 const archivo = Archivo({ subsets: ['latin'] });
@@ -129,7 +130,7 @@ export default function Personal() {
 
         {/* Personal Mode Cover Photo */}
         {isPersonalMode && (
-          <div className="w-full rounded-lg mb-8 h-50">
+          <div className="w-full rounded-lg mb-8 h-60">
             <Image
               src="/Personal.jpeg"
               alt="Personal"
@@ -304,64 +305,86 @@ export default function Personal() {
 
       {/* Right Column - Works Content */}
       <div
-        className="w-full lg:w-[55%] flex flex-col px-6 py-12 lg:px-24 lg:py-18"
+        className="w-full lg:w-[55%] flex flex-col px-6 pt-12 lg:px-[120px] lg:pt-18"
       >
         <motion.section
           variants={VARIANTS_SECTION}
           transition={TRANSITION_SECTION}
-          className="flex flex-col h-full"
+          className="flex flex-col h-full overflow-y-auto"
         >
           {isPersonalMode ? (
             // Personal Mode - Vibes Header
             <div>
-              <h2 className={`font-semibold tracking-wide ${geistMono.className}`} style={{ color: '#0A7455', fontSize: '20px', lineHeight: '1.4' }}>
-                My Vibes
+              <h2 className={`font-semibold tracking-wide ${geistMono.className}`} style={{ fontSize: '20px', lineHeight: '1.4' }}>
+                <span className="text-gray-400 line-through">Projects</span>{' '}
+                <span style={{ color: '#0A7455' }}>Vibes</span>
               </h2>
             </div>
           ) : (
-            // Professional Mode - Original Content
-            <div className="flex-1 flex items-center justify-center">
-              <div className="text-center" style={{ gap: '14px', display: 'flex', flexDirection: 'column' }}>
-                {/* Icon - Text - Icon and Email text grouped */}
-                <div style={{ gap: '14px', display: 'flex', flexDirection: 'column' }}>
-                  {/* Large rotating icon */}
-                  <div className="flex justify-center">
-                    <div className="text-zinc-400 separator-icon-always" style={{ fontSize: '40px' }}>✽</div>
-                  </div>
+            // Professional Mode - Work Section
+            <div className="flex flex-col">
+              <h2 className={`font-semibold tracking-wide ${geistMono.className}`} style={{ color: '#0A7455', fontSize: '20px', lineHeight: '1.4', marginBottom: '6px' }}>
+                Projects
+              </h2>
 
-                  {/* Loading text */}
-                  <div className="flex justify-center">
-                    <p className={`font-normal tracking-wide ${geistMono.className} text-zinc-600`} style={{ fontSize: '14px', lineHeight: '1.4' }}>
-                      Good things take time! Portfolio loading..
+              <p className={`text-gray-600 text-sm ${archivo.className}`} style={{ marginBottom: '18px' }}>
+                To know more about my works, reach me out at{' '}
+                <a href={`mailto:${EMAIL}`} className="text-gray-600 underline hover:text-gray-800 transition-colors">
+                  {EMAIL}
+                </a>
+              </p>
+
+              {/* Projects */}
+              <div>
+                {PROJECTS.map((project, index) => (
+                  <div key={project.id} className={`bg-white rounded-2xl p-6 border border-gray-200 ${index < PROJECTS.length - 1 ? 'mb-6' : ''}`}>
+                    {/* Project Placeholder */}
+                    <div className="w-full h-48 rounded-lg flex items-center justify-center gap-4" style={{ backgroundColor: '#EEF4F2', marginBottom: '26px' }}>
+                      <div className="text-4xl" style={{ color: '#9FADA8' }}>✽</div>
+                      <div className="text-4xl" style={{ color: '#9FADA8' }}>✽</div>
+                      <div className="text-4xl" style={{ color: '#9FADA8' }}>✽</div>
+                    </div>
+
+                    {/* Project Title */}
+                    <h3 className={`font-bold text-xl text-black ${geistMono.className}`} style={{ marginBottom: '4px' }}>
+                      {project.name}
+                    </h3>
+
+                    {/* Project Description */}
+                    <p className={`text-gray-600 text-sm ${archivo.className}`} style={{ lineHeight: '1.5', marginBottom: '26px' }}>
+                      {project.description}
                     </p>
-                  </div>
 
-                  {/* Email text */}
-                  <div>
-                    <p className={`text-zinc-600 ${archivo.className}`} style={{ fontSize: '20px', lineHeight: '1.5' }}>
-                      Until then, let's connect at {' '}
-                      <a className={`underline ${archivo.className}`} style={{ color: '#0A7455', fontWeight: 'semibold' }} href={`mailto:${EMAIL}`}>
-                        {EMAIL}
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 15 15"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="inline-block ml-1"
-                          style={{ color: '#0A7455' }}
-                        >
-                          <path
-                            d="M3.64645 11.3536C3.45118 11.1583 3.45118 10.8417 3.64645 10.6465L10.2929 4L6 4C5.72386 4 5.5 3.77614 5.5 3.5C5.5 3.22386 5.72386 3 6 3L11.5 3C11.6326 3 11.7598 3.05268 11.8536 3.14645C11.9473 3.24022 12 3.36739 12 3.5L12 9.00001C12 9.27615 11.7761 9.50001 11.5 9.50001C11.2239 9.50001 11 9.27615 11 9.00001V4.70711L4.35355 11.3536C4.15829 11.5488 3.84171 11.5488 3.64645 11.3536Z"
-                            fill="currentColor"
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                          />
+                    {/* Action Buttons */}
+                    <div className="flex gap-3">
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`${project.video ? 'flex-1' : 'w-full'} bg-zinc-200 text-zinc-700 px-4 py-2 rounded-sm font-medium transition-colors duration-200 hover:bg-zinc-300 ${archivo.className} flex items-center justify-center gap-2`}
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <polyline points="14,2 14,8 20,8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
+                        Read Documentation
                       </a>
-                    </p>
+                      {project.video && (
+                        <a
+                          href={project.video}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`flex-1 bg-[#0A7455] text-white px-4 py-2 rounded-sm font-medium transition-colors duration-200 hover:bg-[#0A7455]/90 ${archivo.className} flex items-center justify-center gap-2`}
+                        >
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="5,3 19,12 5,21" fill="currentColor" />
+                          </svg>
+                          View Demo
+                        </a>
+                      )}
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
             </div>
           )}
