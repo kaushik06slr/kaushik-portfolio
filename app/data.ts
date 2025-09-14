@@ -64,17 +64,28 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
 export const BLOG_POSTS: BlogPost[] = [
   {
     title: 'Insights from Designing a Low-Code / No-Code Developer Platform ⚡️',
-    description: '[Coming Soon]',
-    link: '',
+    description: 'My learnings from designing a low-code/no-code developer tool and the challenges we faced.',
+    link: '/blog/low-code-no-code-insights',
     uid: 'blog-1',
   },
-  // {
-  //   title: 'Why I left my job to start my own company',
-  //   description:
-  //     'A deep dive into my decision to leave my job and start my own company',
-  //   link: '/blog/exploring-the-intersection-of-design-ai-and-design-engineering',
-  //   uid: 'blog-2',
-  // },
+  {
+    title: 'Design Systems at Scale',
+    description: 'How we built and maintained design systems across multiple product teams and platforms.',
+    link: '/blog/design-systems-at-scale',
+    uid: 'blog-2',
+  },
+  {
+    title: 'The Future of No-Code Design',
+    description: 'Exploring how no-code platforms are changing the way designers approach product development.',
+    link: '/blog/future-of-no-code-design',
+    uid: 'blog-3',
+  },
+  {
+    title: 'Photography and Design Inspiration',
+    description: 'How my photography practice influences my design work and creative process.',
+    link: '/blog/photography-and-design',
+    uid: 'blog-4',
+  },
 ]
 
 export const SOCIAL_LINKS: SocialLink[] = [

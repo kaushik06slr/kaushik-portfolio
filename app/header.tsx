@@ -5,8 +5,8 @@ import Link from 'next/link'
 
 export function Header() {
   return (
-    <header className="mb-8 flex items-center justify-between">
-      <div>
+    <header className="absolute top-0 left-0 w-full">
+      <div className="flex items-center justify-between">
         {/* Header content removed */}
       </div>
     </header>
