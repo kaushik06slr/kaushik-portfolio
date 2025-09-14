@@ -131,7 +131,7 @@ export default function Personal() {
         {isPersonalMode && (
           <div className="w-full rounded-lg mb-8 h-50">
             <Image
-              src="/personal.jpeg"
+              src="/Personal.jpeg"
               alt="Personal"
               width={800}
               height={600}
