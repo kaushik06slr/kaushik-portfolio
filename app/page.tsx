@@ -117,7 +117,7 @@ export default function Personal() {
                 </div>
               </label>
             </div>
-            <span className={`text-xs lg:text-sm ${archivo.className} hidden sm:inline`}>
+            <span className={`text-xs lg:text-sm ${archivo.className}`}>
               <span className="text-zinc-900">Behind the Screen.</span>{' '}
               <span className="text-zinc-600">A little about me, off the grid</span>
             </span>
