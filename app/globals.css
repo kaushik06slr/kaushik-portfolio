@@ -11,6 +11,7 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+
   *,
   ::after,
   ::before,
@@ -37,19 +38,23 @@
 .social-link {
   transition: background-color 0.3s ease;
 }
+
 /* Twitter / X */
 .social-link[href*="twitter.com"]:hover {
-  background-color: #1DA1F2 !important; /* Twitter Blue */
+  background-color: #1DA1F2 !important;
+  /* Twitter Blue */
 }
 
 /* LinkedIn */
 .social-link[href*="linkedin.com"]:hover {
-  background-color: #0A66C2 !important; /* LinkedIn Blue */
+  background-color: #0A66C2 !important;
+  /* LinkedIn Blue */
 }
 
 /* Instagram */
 .social-link[href*="instagram.com"]:hover {
-  background-color: #E4405F !important; /* Instagram Pink */
+  background-color: #E4405F !important;
+  /* Instagram Pink */
 }
 
 /* --- Separator Icon Rotation Animation --- */
@@ -57,6 +62,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -72,4 +78,13 @@
 
 .separator-icon-always {
   animation: spin-slow 3s linear infinite;
+}
+
+/* --- Personal Mode Toggle --- */
+#personalMode:checked+label {
+  background-color: #0A7455;
+}
+
+#personalMode:checked+label>div {
+  transform: translateX(1rem) translateY(0.25rem);
 }
