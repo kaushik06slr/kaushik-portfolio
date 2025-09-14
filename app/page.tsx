@@ -175,7 +175,7 @@ export default function Personal() {
             {isPersonalMode ? (
               <>
                 <p>
-                  <span className="font-semibold italic" style={{ color: '#0A7455' }}>Hello 👋</span> I'm a history lover, traveler, and photography enthusiast. I enjoy exploring the past, capturing the perfect shot, and discovering new stories wherever I go. These days, I spend my time exploring online, daydreaming about new adventures, and letting curiosity guide my thoughts.
+                  <span className="font-semibold italic" style={{ color: '#0A7455' }}>Hello, It's me again 👋</span> I'm a history lover, traveler, and photography enthusiast. I enjoy exploring the past, capturing the perfect shot, and discovering new stories wherever I go. These days, I spend my time exploring online, daydreaming about new adventures, and letting curiosity guide my thoughts.
                 </p>
                 <p style={{ marginTop: '16px' }}>
                   You'll often find me getting lost in movies, vibing to good music, or imagining the perfect shot I'd capture if I were out exploring.
