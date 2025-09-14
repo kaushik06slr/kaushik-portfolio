@@ -73,18 +73,17 @@ function MagneticSocialLink({
 export default function Personal() {
   return (
     <motion.main
-      className="h-screen flex overflow-hidden"
+      className="min-h-screen flex flex-col lg:flex-row lg:h-screen overflow-hidden"
       variants={VARIANTS_CONTAINER}
       initial="hidden"
       animate="visible"
     >
       {/* Left Column - Existing Content */}
       <div
-        className="w-[45%] flex flex-col justify-start overflow-hidden"
+        className="w-full lg:w-[45%] flex flex-col justify-start overflow-hidden border-b lg:border-b-0 lg:border-r border-[#DFF5EE]"
         style={{
           backgroundColor: '#FAFCFC',
-          padding: '72px 96px',
-          borderRight: '1px solid #DFF5EE'
+          padding: '72px 96px'
         }}
       >
         {/* Profile Section */}
@@ -218,9 +217,9 @@ export default function Personal() {
         </motion.section>
       </div>
 
-      {/* Right Column - Blog Content */}
+      {/* Right Column - Works Content */}
       <div
-        className="w-[55%] flex flex-col"
+        className="w-full lg:w-[55%] flex flex-col"
         style={{
           padding: '72px 96px'
         }}
