@@ -356,12 +356,12 @@ export default function Personal() {
                     </p>
 
                     {/* Action Buttons */}
-                    <div className="flex gap-3">
+                    <div className="flex flex-col sm:flex-row gap-3">
                       <a
                         href={project.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`${project.video ? 'flex-1' : 'w-full'} bg-zinc-200 text-zinc-700 px-4 py-2 rounded-sm font-medium transition-colors duration-200 hover:bg-zinc-300 ${archivo.className} flex items-center justify-center gap-2`}
+                        className={`${project.video ? 'sm:flex-1' : 'w-full'} w-full bg-zinc-200 text-zinc-700 px-4 py-2 rounded-sm font-medium transition-colors duration-200 hover:bg-zinc-300 ${archivo.className} flex items-center justify-center gap-2`}
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -374,7 +374,7 @@ export default function Personal() {
                           href={project.video}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className={`flex-1 bg-[#0A7455] text-white px-4 py-2 rounded-sm font-medium transition-colors duration-200 hover:bg-[#0A7455]/90 ${archivo.className} flex items-center justify-center gap-2`}
+                          className={`w-full sm:flex-1 bg-[#0A7455] text-white px-4 py-2 rounded-sm font-medium transition-colors duration-200 hover:bg-[#0A7455]/90 ${archivo.className} flex items-center justify-center gap-2`}
                         >
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <polygon points="5,3 19,12 5,21" fill="currentColor" />
