@@ -90,12 +90,12 @@ export const BLOG_POSTS: BlogPost[] = [
 
 export const SOCIAL_LINKS: SocialLink[] = [
   {
-    label: 'Twitter',
-    link: 'https://twitter.com/kaushik06slr',
-  },
-  {
     label: 'LinkedIn',
     link: 'https://www.linkedin.com/in/kaushikslr',
+  },
+  {
+    label: 'Twitter',
+    link: 'https://twitter.com/kaushik06slr',
   },
   {
     label: 'Instagram',

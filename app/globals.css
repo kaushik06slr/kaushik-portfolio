@@ -51,3 +51,25 @@
 .social-link[href*="instagram.com"]:hover {
   background-color: #E4405F !important; /* Instagram Pink */
 }
+
+/* --- Separator Icon Rotation Animation --- */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.separator-icon {
+  transition: transform 0.3s ease;
+}
+
+.separator-icon:hover {
+  animation: spin-slow 2s linear infinite;
+}
+
+.separator-icon-always {
+  animation: spin-slow 3s linear infinite;
+}

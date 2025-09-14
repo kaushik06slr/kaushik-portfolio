@@ -123,7 +123,7 @@ export default function Personal() {
         {/* Separator */}
         <div className="flex items-center" style={{ margin: '2rem 0' }}>
           <div className="flex-1 h-px bg-gray-200"></div>
-          <div className="mx-4 text-2xl" style={{ color: '#0A7455' }}>✽</div>
+          <div className="mx-4 text-2xl separator-icon cursor-pointer" style={{ color: '#0A7455' }}>✽</div>
           <div className="flex-1 h-px bg-gray-200"></div>
         </div>
 
@@ -188,19 +188,11 @@ export default function Personal() {
         {/* Separator */}
         <div className="flex items-center" style={{ margin: '2rem 0' }}>
           <div className="flex-1 h-px bg-gray-200"></div>
-          <div className="mx-4 text-2xl" style={{ color: '#0A7455' }}>✽</div>
+          <div className="mx-4 text-2xl separator-icon cursor-pointer" style={{ color: '#0A7455' }}>✽</div>
           <div className="flex-1 h-px bg-gray-200"></div>
         </div>
 
-        {/* Contact Section */}
-        <div className="mb-4">
-          <p className={`text-zinc-600 ${archivo.className}`} style={{ fontSize: '14px', lineHeight: '1.5' }}>
-            To learn more about my works, feel free to reach me at {' '}
-            <a className={`underline text-zinc-700 ${archivo.className}`} href={`mailto:${EMAIL}`}>
-              {EMAIL}
-            </a>
-          </p>
-        </div>
+
 
         <motion.section
           variants={VARIANTS_SECTION}
@@ -230,22 +222,47 @@ export default function Personal() {
           className="flex flex-col h-full"
         >
           <div className="flex-1 flex items-center justify-center">
-            <div className="flex items-center space-x-4">
-              {/* First Separator Icon */}
-              <div className="text-2xl" style={{ color: '#0A7455' }}>✽</div>
+            <div className="text-center" style={{ gap: '14px', display: 'flex', flexDirection: 'column' }}>
+              {/* Icon - Text - Icon and Email text grouped */}
+              <div style={{ gap: '14px', display: 'flex', flexDirection: 'column' }}>
+                {/* Large rotating icon */}
+                <div className="flex justify-center">
+                  <div className="text-zinc-400 separator-icon-always" style={{ fontSize: '40px' }}>✽</div>
+                </div>
 
-              {/* Works Coming Soon text */}
-              <div className="flex items-center space-x-2">
-                <h2 className={`font-normal tracking-wide ${geistMono.className} text-zinc-600`} style={{ fontSize: '20px', lineHeight: '1.4' }}>
-                  Works
-                </h2>
-                <p className={`font-normal tracking-wide ${geistMono.className} text-zinc-600`} style={{ fontSize: '20px', lineHeight: '1.4' }}>
-                  Coming Soon
-                </p>
+                {/* Loading text */}
+                <div className="flex justify-center">
+                  <p className={`font-normal tracking-wide ${geistMono.className} text-zinc-600`} style={{ fontSize: '14px', lineHeight: '1.4' }}>
+                    Good things take time! Portfolio loading..
+                  </p>
+                </div>
+
+                {/* Email text */}
+                <div>
+                  <p className={`text-zinc-600 ${archivo.className}`} style={{ fontSize: '20px', lineHeight: '1.5' }}>
+                    Until then, let's connect at {' '}
+                    <a className={`underline ${archivo.className}`} style={{ color: '#0A7455', fontWeight: 'semibold' }} href={`mailto:${EMAIL}`}>
+                      {EMAIL}
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 15 15"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="inline-block ml-1"
+                        style={{ color: '#0A7455' }}
+                      >
+                        <path
+                          d="M3.64645 11.3536C3.45118 11.1583 3.45118 10.8417 3.64645 10.6465L10.2929 4L6 4C5.72386 4 5.5 3.77614 5.5 3.5C5.5 3.22386 5.72386 3 6 3L11.5 3C11.6326 3 11.7598 3.05268 11.8536 3.14645C11.9473 3.24022 12 3.36739 12 3.5L12 9.00001C12 9.27615 11.7761 9.50001 11.5 9.50001C11.2239 9.50001 11 9.27615 11 9.00001V4.70711L4.35355 11.3536C4.15829 11.5488 3.84171 11.5488 3.64645 11.3536Z"
+                          fill="currentColor"
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </a>
+                  </p>
+                </div>
               </div>
-
-              {/* Second Separator Icon */}
-              <div className="text-2xl" style={{ color: '#0A7455' }}>✽</div>
             </div>
           </div>
         </motion.section>
