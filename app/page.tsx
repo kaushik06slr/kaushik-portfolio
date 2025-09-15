@@ -197,7 +197,8 @@ export default function Personal() {
                 alt="Kaushik R"
                 width={150}
                 height={150}
-                className="w-full h-full object-cover scale-150 object-center"
+                className="w-full h-full object-cover scale-100"
+                style={{ objectPosition: 'center -40px' }}
                 quality={100}
                 priority
               />
