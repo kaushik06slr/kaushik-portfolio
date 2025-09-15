@@ -153,11 +153,11 @@ export default function Personal() {
           {!isPersonalMode && (
             <div className="rounded-md overflow-hidden bg-gray-200" style={{ width: '150px', height: '150px' }}>
               <Image
-                src="/Professional.jpeg"
+                src="/Professional.png"
                 alt="Kaushik R"
                 width={150}
                 height={150}
-                className="w-full h-full object-cover scale-100 object-center"
+                className="w-full h-full object-cover scale-150 object-center"
                 quality={100}
                 priority
               />
