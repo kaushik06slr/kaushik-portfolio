@@ -1,6 +1,6 @@
 'use client'
-import { useState } from 'react'
-import { motion } from 'motion/react'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
 import Image from 'next/image';
 import { Magnetic } from '@/components/ui/magnetic'
 import { Archivo } from 'next/font/google';
@@ -8,7 +8,6 @@ import { Geist_Mono } from 'next/font/google';
 import { PT_Serif } from 'next/font/google';
 import {
   WORK_EXPERIENCE,
-  BLOG_POSTS,
   EMAIL,
   SOCIAL_LINKS,
   PROJECTS,
@@ -76,6 +75,23 @@ function MagneticSocialLink({
 
 export default function Personal() {
   const [isPersonalMode, setIsPersonalMode] = useState(false)
+  const [greetingIndex, setGreetingIndex] = useState(0)
+  const greetings = [
+    { text: 'வணக்கம்', emoji: '🙏' },
+    { text: 'नमस्ते', emoji: '🙏' },
+    { text: 'Hello', emoji: '👋' },
+    { text: 'Hola', emoji: '👋' }
+  ]
+
+  useEffect(() => {
+    if (isPersonalMode) {
+      const interval = setInterval(() => {
+        setGreetingIndex((prev) => (prev + 1) % greetings.length)
+      }, 2000) // Change every 2 seconds
+
+      return () => clearInterval(interval)
+    }
+  }, [isPersonalMode, greetings.length])
 
   return (
     <motion.main
@@ -130,17 +146,41 @@ export default function Personal() {
 
         {/* Personal Mode Cover Photo */}
         {isPersonalMode && (
-          <div className="w-full rounded-lg mb-8 h-60">
-            <Image
-              src="/Personal.jpeg"
-              alt="Personal"
-              width={800}
-              height={600}
-              className="w-full h-full object-cover scale-100 transform"
-              quality={100}
-              priority
-            />
-          </div>
+          <>
+            <div className={`text-2xl lg:text-3xl ${geistMono.className} mb-6`}>
+              <div className="inline-block">
+                <span className="font-semibold" style={{ color: '#0A7455' }}>👋 </span>
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={greetingIndex}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{
+                      duration: 0.4,
+                      ease: "easeInOut"
+                    }}
+                    className="font-semibold inline-block"
+                    style={{ color: '#0A7455' }}
+                  >
+                    {greetings[greetingIndex].text}
+                  </motion.span>
+                </AnimatePresence>
+              </div>
+
+            </div>
+            <div className="w-full rounded-lg mb-8 h-60">
+              <Image
+                src="/Personal.jpeg"
+                alt="Personal"
+                width={800}
+                height={600}
+                className="w-full h-full object-cover scale-100 transform"
+                quality={100}
+                priority
+              />
+            </div>
+          </>
         )}
 
         {/* Profile Section */}
@@ -176,7 +216,7 @@ export default function Personal() {
             {isPersonalMode ? (
               <>
                 <p>
-                  <span className="font-semibold italic" style={{ color: '#0A7455' }}>Hello, It's me again 👋</span> I'm a history lover, traveler, and photography enthusiast. I enjoy exploring the past, capturing the perfect shot, and discovering new stories wherever I go. These days, I spend my time exploring online, daydreaming about new adventures, and letting curiosity guide my thoughts.
+                  I'm a history lover, traveler, and photography enthusiast. I enjoy exploring the past, capturing the perfect shot, and discovering new stories wherever I go. These days, I spend my time exploring online, daydreaming about new adventures, and letting curiosity guide my thoughts.
                 </p>
                 <p style={{ marginTop: '16px' }}>
                   You'll often find me getting lost in movies, vibing to good music, or imagining the perfect shot I'd capture if I were out exploring.
