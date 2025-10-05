@@ -1,9 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { DM_Serif_Display, Geist, Geist_Mono } from 'next/font/google'
-import localFont from 'next/font/local';
-const inter = localFont({
-  src: './fonts/DMSerifDisplay-Regular.ttf', // Path to your font file
-});
+import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { Header } from './header'
 import { ThemeProvider } from 'next-themes'
@@ -52,7 +48,7 @@ export default function RootLayout({
           storageKey="theme"
           defaultTheme="light"
         >
-          <div className="flex min-h-screen w-full flex-col font-[family-name:var(--font-inter-tight)]">
+          <div className="flex min-h-screen w-full flex-col">
             <div className="relative w-full flex-1">
               <Header />
               {children}

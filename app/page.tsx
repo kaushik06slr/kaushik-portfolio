@@ -2,301 +2,357 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import Image from 'next/image';
-import { Magnetic } from '@/components/ui/magnetic'
+
 import { Archivo } from 'next/font/google';
 import { Geist_Mono } from 'next/font/google';
-import { PT_Serif } from 'next/font/google';
+
+import localFont from 'next/font/local';
 import {
   WORK_EXPERIENCE,
-  EMAIL,
   SOCIAL_LINKS,
   PROJECTS,
+  VISUAL_SNIPPETS,
 } from './data'
 
 const archivo = Archivo({ subsets: ['latin'] });
 const geistMono = Geist_Mono({ subsets: ['latin'] });
-const ptSerif = PT_Serif({ subsets: ['latin'], weight: '400' });
+
+const beautyDemo = localFont({
+  src: './fonts/BeautyDemo.otf',
+  display: 'swap',
+});
 const VARIANTS_CONTAINER = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15,
+      duration: 0,
     },
   },
 }
 
 const VARIANTS_SECTION = {
-  hidden: { opacity: 0, y: 20, filter: 'blur(8px)' },
-  visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
+  hidden: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    scale: 1
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    scale: 1
+  },
 }
 
 const TRANSITION_SECTION = {
-  duration: 0.3,
+  duration: 0,
 }
 
 
 
-function MagneticSocialLink({
-  children,
-  link,
-}: {
-  children: React.ReactNode
-  link: string
-}) {
-  return (
-    <Magnetic springOptions={{ bounce: 0 }} intensity={0}>
-      <a
-        href={link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group relative inline-flex shrink-0 items-center gap-[1px] rounded-full bg-zinc-100 p-2.5 py-1 text-sm text-black transition-colors duration-200 hover:bg-zinc-800 hover:text-white social-link"
-      >
-        {children}
-        <svg
-          width="15"
-          height="15"
-          viewBox="0 0 15 15"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-3 w-3"
-        >
-          <path
-            d="M3.64645 11.3536C3.45118 11.1583 3.45118 10.8417 3.64645 10.6465L10.2929 4L6 4C5.72386 4 5.5 3.77614 5.5 3.5C5.5 3.22386 5.72386 3 6 3L11.5 3C11.6326 3 11.7598 3.05268 11.8536 3.14645C11.9473 3.24022 12 3.36739 12 3.5L12 9.00001C12 9.27615 11.7761 9.50001 11.5 9.50001C11.2239 9.50001 11 9.27615 11 9.00001V4.70711L4.35355 11.3536C4.15829 11.5488 3.84171 11.5488 3.64645 11.3536Z"
-            fill="currentColor"
-            fillRule="evenodd"
-            clipRule="evenodd"
-          ></path>
-        </svg>
-      </a>
-    </Magnetic>
-  )
-}
+
 
 export default function Personal() {
   const [isPersonalMode, setIsPersonalMode] = useState(false)
-  const [greetingIndex, setGreetingIndex] = useState(0)
-  const greetings = [
-    { text: 'வணக்கம்', emoji: '🙏' },
-    { text: 'नमस्ते', emoji: '🙏' },
-    { text: 'Hello', emoji: '👋' },
-    { text: 'Hola', emoji: '👋' }
-  ]
+  const [activeTab, setActiveTab] = useState('case-studies')
+  const [isLoading, setIsLoading] = useState(true)
+  const [enlargedImage, setEnlargedImage] = useState<string | null>(null)
+  const [tooltip, setTooltip] = useState({ show: false, x: 0, y: 0 })
+  const [iconColor, setIconColor] = useState('white')
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  // Function to analyze image brightness and set icon color
+  const analyzeImageBrightness = (imageSrc: string) => {
+    if (typeof window === 'undefined') return // Only run on client side
+
+    try {
+      const img = new window.Image()
+      img.crossOrigin = 'anonymous'
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+        if (!ctx) return
+
+        canvas.width = img.width
+        canvas.height = img.height
+        ctx.drawImage(img, 0, 0)
+
+        try {
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+          const data = imageData.data
+          let totalBrightness = 0
+
+          // Sample pixels for performance (every 10th pixel)
+          for (let i = 0; i < data.length; i += 40) {
+            const r = data[i]
+            const g = data[i + 1]
+            const b = data[i + 2]
+            // Calculate perceived brightness using luminance formula
+            const brightness = (0.299 * r + 0.587 * g + 0.114 * b)
+            totalBrightness += brightness
+          }
+
+          const avgBrightness = totalBrightness / (data.length / 40)
+          // If average brightness > 128, use dark icon; otherwise use light icon
+          setIconColor(avgBrightness > 128 ? '#333333' : 'white')
+        } catch (error) {
+          // Fallback to white if canvas analysis fails
+          setIconColor('white')
+        }
+      }
+      img.onerror = () => {
+        // Fallback to white if image fails to load
+        setIconColor('white')
+      }
+      img.src = imageSrc
+    } catch (error) {
+      // Fallback to white if any error occurs
+      setIconColor('white')
+    }
+  }
+
+  // Navigation functions for image modal
+  const navigateImage = (direction: 'prev' | 'next') => {
+    const currentIndex = VISUAL_SNIPPETS.findIndex(snippet => snippet.image === enlargedImage)
+    let newIndex
+
+    if (direction === 'prev') {
+      newIndex = currentIndex > 0 ? currentIndex - 1 : VISUAL_SNIPPETS.length - 1
+    } else {
+      newIndex = currentIndex < VISUAL_SNIPPETS.length - 1 ? currentIndex + 1 : 0
+    }
+
+    const newImage = VISUAL_SNIPPETS[newIndex].image
+    setEnlargedImage(newImage)
+    setCurrentImageIndex(newIndex)
+    analyzeImageBrightness(newImage)
+  }
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (enlargedImage) {
+        if (e.key === 'ArrowLeft') {
+          navigateImage('prev')
+        } else if (e.key === 'ArrowRight') {
+          navigateImage('next')
+        } else if (e.key === 'Escape') {
+          setEnlargedImage(null)
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
+  }, [enlargedImage])
 
   useEffect(() => {
-    if (isPersonalMode) {
-      const interval = setInterval(() => {
-        setGreetingIndex((prev) => (prev + 1) % greetings.length)
-      }, 2000) // Change every 2 seconds
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 3000) // 3 seconds loading screen
 
-      return () => clearInterval(interval)
-    }
-  }, [isPersonalMode, greetings.length])
+    return () => clearTimeout(timer)
+  }, [])
+
+
 
   return (
-    <motion.main
-      className="min-h-screen flex flex-col lg:flex-row lg:h-screen overflow-hidden"
-      variants={VARIANTS_CONTAINER}
-      initial="hidden"
-      animate="visible"
-    >
-      {/* Left Column - Existing Content */}
-      <div
-        className="w-full lg:w-[45%] flex flex-col justify-start overflow-hidden border-b lg:border-b-0 lg:border-r border-[#DFF5EE] relative px-6 py-12 lg:px-24 lg:py-18"
-        style={{
-          backgroundColor: '#FAFCFC'
-        }}
-      >
-        {/* Personal Mode Toggle */}
-        <div className="absolute top-6 left-6 lg:left-24">
-          <div className="flex items-center space-x-3">
-            <div className="relative">
-              <input
-                type="checkbox"
-                id="personalMode"
-                className="sr-only"
-                checked={isPersonalMode}
-                onChange={(e) => setIsPersonalMode(e.target.checked)}
-              />
-              <label
-                htmlFor="personalMode"
-                className={`relative block w-10 h-6 rounded-full cursor-pointer transition-colors duration-200 ${isPersonalMode ? 'bg-[#0A7455]' : 'bg-zinc-300 hover:bg-zinc-400'
-                  }`}
-              >
-                <div
-                  className="absolute w-4 h-4 bg-white rounded-full shadow-sm transition-all duration-200 flex items-center justify-center pointer-events-none"
-                  style={{
-                    top: isPersonalMode ? '0px' : '4px',
-                    left: isPersonalMode ? '4px' : '4px'
-                  }}
-                >
-                  <span className={`text-xs ${isPersonalMode ? 'text-[#0A7455]' : 'text-zinc-600'}`}>✽</span>
-                </div>
-              </label>
-            </div>
-            <span className={`text-xs lg:text-sm ${archivo.className}`}>
-              <span className="text-zinc-900">Behind the Screen.</span>{' '}
-              <span className="text-zinc-600">A little about me, off the grid</span>
-            </span>
-          </div>
-        </div>
+    <>
 
-        {/* Spacer for toggle */}
-        <div style={{ marginTop: '26px' }}></div>
-
-        {/* Personal Mode Cover Photo */}
-        {isPersonalMode && (
-          <>
-            <div className={`text-2xl lg:text-3xl ${geistMono.className} mb-6`}>
-              <div className="inline-block">
-                <span className="font-semibold" style={{ color: '#0A7455' }}>👋 </span>
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={greetingIndex}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{
-                      duration: 0.4,
-                      ease: "easeInOut"
-                    }}
-                    className="font-semibold inline-block"
-                    style={{ color: '#0A7455' }}
-                  >
-                    {greetings[greetingIndex].text}
-                  </motion.span>
-                </AnimatePresence>
-              </div>
-
-            </div>
-            <div className="w-full rounded-lg mb-8 h-60">
-              <Image
-                src="/Personal.jpeg"
-                alt="Personal"
-                width={800}
-                height={600}
-                className="w-full h-full object-cover scale-100 transform"
-                quality={100}
-                priority
-              />
-            </div>
-          </>
-        )}
-
-        {/* Profile Section */}
-        <motion.section
-          variants={VARIANTS_SECTION}
-          transition={TRANSITION_SECTION}
-          className="flex flex-col"
+      {isPersonalMode ? (
+        // Personal Mode - Bio and Postcards Layout
+        <motion.main
+          className="min-h-screen relative px-2 py-4 lg:px-8 lg:py-6"
+          style={{ backgroundColor: '#FAFCFC' }}
+          variants={VARIANTS_CONTAINER}
+          initial="hidden"
+          animate="visible"
         >
-          {/* Profile Image */}
-          {!isPersonalMode && (
-            <div className="rounded-md overflow-hidden bg-gray-200" style={{ width: '150px', height: '150px' }}>
-              <Image
-                src="/Professional.png"
-                alt="Kaushik R"
-                width={150}
-                height={150}
-                className="w-full h-full object-cover scale-100"
-                style={{ objectPosition: 'center -40px' }}
-                quality={100}
-                priority
-              />
+          {/* Personal Mode Toggle */}
+          <div className="absolute top-6 left-6 lg:left-24 z-10">
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  id="personalModeToggle"
+                  className="sr-only"
+                  checked={isPersonalMode}
+                  onChange={(e) => setIsPersonalMode(e.target.checked)}
+                />
+                <label
+                  htmlFor="personalModeToggle"
+                  className={`relative block w-10 h-6 rounded-full cursor-pointer transition-colors duration-200 ${isPersonalMode ? 'bg-[#0A7455]' : 'bg-zinc-300 hover:bg-zinc-400'}`}
+                >
+                  <div
+                    className="absolute w-4 h-4 bg-white rounded-full shadow-sm transition-all duration-200 flex items-center justify-center pointer-events-none"
+                    style={{
+                      top: '4px',
+                      left: isPersonalMode ? '20px' : '4px'
+                    }}
+                  >
+                    <span className={`text-xs ${isPersonalMode ? 'text-[#0A7455]' : 'text-zinc-600'}`}>✽</span>
+                  </div>
+                </label>
+              </div>
+              <span className={`text-xs lg:text-sm ${archivo.className}`}>
+                <span className="text-zinc-900">Behind pixels.</span>{' '}
+                <span className="text-zinc-600">A little about me, off the grid</span>
+              </span>
             </div>
-          )}
-
-          {/* Name */}
-          {!isPersonalMode && (
-            <h1 className={`font-bold tracking-wide ${geistMono.className} text-2xl lg:text-3xl`} style={{ color: '#0A7455', lineHeight: '1.4', marginTop: '32px' }}>
-              Kaushik
-            </h1>
-          )}
-
-          {/* Bio Text */}
-          <div className={`text-zinc-600 ${isPersonalMode ? ptSerif.className : archivo.className} text-sm lg:text-base`} style={{ fontSize: isPersonalMode ? 'clamp(18px, 4vw, 24px)' : 'clamp(14px, 3vw, 16px)', lineHeight: '1.6', marginTop: isPersonalMode ? '32px' : '16px', textAlign: 'justify' }}>
-            {isPersonalMode ? (
-              <>
-                <p>
-                  I'm a history lover, traveler, and photography enthusiast. I enjoy exploring the past, capturing the perfect shot, and discovering new stories wherever I go. These days, I spend my time exploring online, daydreaming about new adventures, and letting curiosity guide my thoughts.
-                </p>
-                <p style={{ marginTop: '16px' }}>
-                  You'll often find me getting lost in movies, vibing to good music, or imagining the perfect shot I'd capture if I were out exploring.
-                </p>
-              </>
-            ) : (
-              <p>
-                A Product Designer from Chennai with over 5 years of experience turning complexity into clarity. My work spans low-code/no-code platforms and fintech, where I focus on building intuitive, scalable solutions rooted in systems thinking. Outside of work, I enjoy photography — it allows me to capture diverse perspectives and fuels the creativity I bring into design.
-              </p>
-            )}
           </div>
 
-          {/* Social Links in Personal Mode */}
-          {isPersonalMode && (
-            <div style={{ marginTop: '32px' }}>
-              <h3 className={`font-medium tracking-wide ${geistMono.className} text-lg`} style={{ color: '#0A7455', marginBottom: '16px' }}>
-                Find me at
-              </h3>
-              <div className="flex items-center space-x-3">
-                {SOCIAL_LINKS.filter(link => link.label === 'Twitter' || link.label === 'Instagram').map((link) => (
-                  <MagneticSocialLink key={link.label} link={link.link}>
-                    {link.label}
-                  </MagneticSocialLink>
-                ))}
-              </div>
-            </div>
-          )}
-
-        </motion.section>
-
-        {/* Experience Section with Separators */}
-        {!isPersonalMode && (
-          <>
-            {/* Separator */}
-            <div className="flex items-center" style={{ margin: '2rem 0' }}>
-              <div className="flex-1 h-px bg-gray-200"></div>
-              <div className="mx-4 text-2xl separator-icon cursor-pointer" style={{ color: '#0A7455' }}>✽</div>
-              <div className="flex-1 h-px bg-gray-200"></div>
-            </div>
-
-            {/* Work Experience Section */}
-            <motion.section
+          {/* Horizontal Carousel Layout */}
+          <div className="relative w-full h-screen flex flex-col mt-2">
+            {/* Top Section - About Me Heading */}
+            <motion.div
               variants={VARIANTS_SECTION}
               transition={TRANSITION_SECTION}
-              className="flex flex-col"
+              className="bg-#FAFCFC pt-12 px-8"
+              style={{ paddingBottom: '32px' }}
             >
-              <h2 className={`font-semibold tracking-wide ${geistMono.className}`} style={{ color: '#323232', fontSize: '20px', lineHeight: '1.4' }}>
-                Experience
-              </h2>
-              <div className="flex flex-col" style={{ marginTop: '24px' }}>
-                {WORK_EXPERIENCE.map((job, index) => (
-                  <div
-                    key={job.id}
-                    className="space-y-1"
-                    style={{
-                      marginBottom: job.id === 'work1' ? '28px' : index < WORK_EXPERIENCE.length - 1 ? '28px' : '0px'
-                    }}
-                  >
-                    <div className="flex items-baseline">
-                      <h3 className={`font-medium ${archivo.className}`} style={{ color: '#323232', fontSize: '18px', lineHeight: '1.5' }}>
-                        {job.title},
-                      </h3>
-                      <div className="flex items-center ml-1">
-                        <p className={`text-zinc-600 ${archivo.className}`} style={{ fontSize: '18px', lineHeight: '1.5' }}>
-                          {job.company}
-                        </p>
+              <div className="max-w-4xl mx-auto text-center">
+                <h1 className={`text-6xl lg:text-6xl ${beautyDemo.className} mb-1`} style={{ color: '#0A7455' }}>
+                  Life in postcards ✨
+                </h1>
+              </div>
+            </motion.div>
+
+            {/* Middle Section - Marquee Carousel */}
+            <motion.div
+              variants={VARIANTS_SECTION}
+              transition={TRANSITION_SECTION}
+              className="flex items-center px-8"
+              style={{ paddingTop: '0px', paddingBottom: '26px' }}
+            >
+              {/* Marquee container */}
+              <div className="w-full overflow-hidden">
+                <div className="flex space-x-6 animate-marquee" style={{ width: 'max-content' }}>
+                  {/* First set of images */}
+                  {[
+                    "Thailand.jpeg",
+                    "☕️.jpeg",
+                    "Golden Gate Bridge.jpeg",
+                    "It's me again!.jpeg",
+                    "🍦.jpeg",
+                    "🌆.jpeg",
+                    "Mysore.jpeg",
+                    "🤘🎸.jpeg",
+                    "Carmel by the Sea.jpeg",
+                    "🍿🎬.jpeg",
+                    "New York.jpeg",
+                    "✨.jpeg",
+                    "Appian HQ, Virginia.jpeg",
+                    "Chennai ❤️.jpeg"
+                  ].map((image) => (
+                    <div
+                      key={image}
+                      className="flex-shrink-0 bg-white border border-gray-200"
+                      style={{ padding: '12px 12px 24px 12px', boxShadow: '0 1px 2px 0 rgba(111, 111, 111, 0.05)' }}
+                    >
+                      <div className="overflow-hidden" style={{ width: '280px', height: '350px' }}>
+                        <Image
+                          src={`/About Me/${image}`}
+                          alt={image.replace(/\.(jpeg|jpg)$/, '')}
+                          width={280}
+                          height={350}
+                          className="w-full h-full object-cover"
+                          quality={100}
+                        />
+                      </div>
+                      {/* Caption outside image */}
+                      <div className="mt-3">
+                        <div className={`text-gray-400 text-xs ${geistMono.className}`}>
+                          {image.replace(/\.(jpeg|jpg)$/, '')}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {/* Duplicate set for seamless loop */}
+                  {[
+                    "Thailand.jpeg",
+                    "☕️.jpeg",
+                    "Golden Gate Bridge.jpeg",
+                    "It's me again!.jpeg",
+                    "🍦.jpeg",
+                    "🌆.jpeg",
+                    "Mysore.jpeg",
+                    "🤘🎸.jpeg",
+                    "Carmel by the Sea.jpeg",
+                    "🍿🎬.jpeg",
+                    "New York.jpeg",
+                    "✨.jpeg",
+                    "Appian HQ, Virginia.jpeg",
+                    "Chennai ❤️.jpeg"
+                  ].map((image) => (
+                    <div
+                      key={`duplicate-${image}`}
+                      className="flex-shrink-0 bg-white border border-gray-200"
+                      style={{ padding: '12px 12px 24px 12px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}
+                    >
+                      <div className="overflow-hidden" style={{ width: '280px', height: '350px' }}>
+                        <Image
+                          src={`/About Me/${image}`}
+                          alt={image.replace(/\.(jpeg|jpg)$/, '')}
+                          width={280}
+                          height={350}
+                          className="w-full h-full object-cover"
+                          quality={100}
+                        />
+                      </div>
+                      {/* Caption outside image */}
+                      <div className="mt-3">
+                        <div className={`text-gray-400 text-xs ${geistMono.className}`}>
+                          {image.replace(/\.(jpeg|jpg)$/, '')}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Bottom Section - Bio Content */}
+            <motion.div
+              variants={VARIANTS_SECTION}
+              transition={TRANSITION_SECTION}
+              className="bg-#FAFCFC pb-12 px-8"
+              style={{ paddingTop: '0px' }}
+            >
+              <div className="max-w-7xl mx-auto text-center" style={{ paddingTop: '24px' }}>
+                <div className={`text-zinc-500 tracking-normal ${archivo.className}`} style={{ fontSize: 'clamp(16px, 2.5vw, 18px)', lineHeight: '1.6', textAlign: 'center' }}>
+                  <p className="mb-3">
+                    Hello again 👋 I’m Kaushik! I was born in Chennai and spent my early years in different parts of India before coming back here, where I’ve been for the past few years.. Like many Indian kids, I studied engineering… but somewhere during that time, I stumbled into design. It started with me making random posters in Photoshop and Illustrator, and before I knew it, that little hobby led me in to Product (aka UX) design… and well, that’s now my full-blown career 😅.
+
+                  </p>
+                  <p>
+                    When I’m not designing, I’m usually listening to music or watching a movie. Photography is one of my biggest passions, and yes, I often stop at random places just because the light looks perfect 😅. I also love learning new things and exploring topics around History, Travel, Food, and Sports. The two teams I follow religiously are Chennai Super Kings (CSK) and Arsenal. Let's connect, Always up for a good chat! 😊
+                  </p>
+                </div>
+
+                {/* Social Links */}
+                <div style={{ marginTop: '20px' }}>
+                  <h3 className={`font-medium tracking-wide ${geistMono.className} text-sm`} style={{ color: '#6B7350', marginBottom: '6px' }}>
+                    Social Links
+                  </h3>
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-0">
+                    {SOCIAL_LINKS.filter(link => link.label === 'Instagram' || link.label === 'X.com').map((link, index, filteredArray) => (
+                      <span key={link.label} className="flex items-center">
                         <a
-                          href={job.link}
+                          href={link.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="ml-1 text-zinc-400 hover:text-zinc-600 transition-colors duration-200"
+                          className={`${archivo.className} text-zinc-600 hover:text-[#0A7455] transition-colors duration-200 flex items-center gap-1 text-sm`}
                         >
+                          {link.label}
                           <svg
-                            width="14"
-                            height="14"
+                            width="12"
+                            height="12"
                             viewBox="0 0 15 15"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
-                            className="inline-block"
+                            className="h-3 w-3"
                           >
                             <path
                               d="M3.64645 11.3536C3.45118 11.1583 3.45118 10.8417 3.64645 10.6465L10.2929 4L6 4C5.72386 4 5.5 3.77614 5.5 3.5C5.5 3.22386 5.72386 3 6 3L11.5 3C11.6326 3 11.7598 3.05268 11.8536 3.14645C11.9473 3.24022 12 3.36739 12 3.5L12 9.00001C12 9.27615 11.7761 9.50001 11.5 9.50001C11.2239 9.50001 11 9.27615 11 9.00001V4.70711L4.35355 11.3536C4.15829 11.5488 3.84171 11.5488 3.64645 11.3536Z"
@@ -306,131 +362,630 @@ export default function Personal() {
                             />
                           </svg>
                         </a>
+                        {index < filteredArray.length - 1 && (
+                          <span className="mx-3 text-zinc-400 hidden sm:inline">•</span>
+                        )}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Footer Note */}
+                <div className={`text-center mt-6 text-xs text-gray-400 tracking-wide ${archivo.className}`}>
+                  Designed with love ❤️, Co-built with Claude 🤖
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </motion.main>
+      ) : (
+        // Professional Mode - Two Column Layout
+        <motion.main
+          className="min-h-screen flex flex-col lg:flex-row lg:h-screen overflow-hidden"
+          variants={VARIANTS_CONTAINER}
+          initial="hidden"
+          animate="visible"
+        >
+          {/* Left Column - Existing Content */}
+          <div
+            className="w-full lg:w-[45%] flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#DFF5EE] relative px-6 py-8 lg:px-24 lg:py-12 min-h-screen"
+            style={{
+              backgroundColor: '#FAFCFC'
+              // Dark mode: backgroundColor: '#0F0F0F', border: 'border-zinc-800'
+            }}
+          >
+            {/* Personal Mode Toggle */}
+            <div className="absolute top-6 left-6 lg:left-24">
+              <div className="flex items-center space-x-3">
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    id="personalMode"
+                    className="sr-only"
+                    checked={isPersonalMode}
+                    onChange={(e) => setIsPersonalMode(e.target.checked)}
+                  />
+                  <label
+                    htmlFor="personalMode"
+                    className={`relative block w-10 h-6 rounded-full cursor-pointer transition-colors duration-200 ${isPersonalMode ? 'bg-[#0A7455]' : 'bg-zinc-300 hover:bg-zinc-400'
+                      // Dark mode: 'bg-zinc-700 hover:bg-zinc-600'
+                      }`}
+                  >
+                    <div
+                      className="absolute w-4 h-4 bg-white rounded-full shadow-sm transition-all duration-200 flex items-center justify-center pointer-events-none"
+                      style={{
+                        top: isPersonalMode ? '0px' : '4px',
+                        left: isPersonalMode ? '4px' : '4px'
+                      }}
+                    >
+                      <span className={`text-xs ${isPersonalMode ? 'text-[#0A7455]' : 'text-zinc-600'}`}>✽</span>
+                      {/* Dark mode: 'text-zinc-400' */}
+                    </div>
+                  </label>
+                </div>
+                <span className={`text-xs lg:text-sm ${archivo.className}`}>
+                  <span className="text-zinc-900">Behind pixels.</span>{' '}
+                  <span className="text-zinc-600">A little about me, off the grid</span>
+                  {/* Dark mode: text-zinc-100, text-zinc-400 */}
+                </span>
+              </div>
+            </div>
+
+            {/* Spacer for toggle */}
+            <div style={{ marginTop: '26px' }}></div>
+
+
+
+            {/* Profile Section */}
+            <motion.section
+              variants={VARIANTS_SECTION}
+              transition={TRANSITION_SECTION}
+              className="flex flex-col items-center text-center flex-grow"
+            >
+              {/* Profile Image */}
+              {!isPersonalMode && (
+                <div className="flex justify-center">
+                  <div className="relative">
+                    <div className="rounded-full overflow-hidden bg-black" style={{ width: '170px', height: '170px' }}>
+                      <Image
+                        src="/Professional.png"
+                        alt="Kaushik R"
+                        width={220}
+                        height={220}
+                        className="w-full h-full scale-100 object-cover"
+                        style={{ objectPosition: 'center -43px' }}
+                        quality={100}
+                        priority
+                      />
+                    </div>
+
+                    {/* Hello Badge */}
+                    <div className="absolute bottom-3 -left-6">
+                      <div
+                        className="hello-chip rounded-full px-3 py-1 flex items-center border-1 gap-1.5 cursor-pointer"
+                        style={{ backgroundColor: '#fefefe' }}
+                      >
+                        <span className="wave-emoji text-md inline-block origin-bottom-right">👋</span>
+                        <span className="hello-text text-sm font-medium text-gray-800">Hello</span>
                       </div>
                     </div>
-                    <span className={`text-zinc-500 ${archivo.className}`} style={{ fontSize: '14px', lineHeight: '1.5' }}>
-                      {job.start} - {job.end}
-                    </span>
                   </div>
-                ))}
+                </div>
+              )}
+
+              {/* Name */}
+              {!isPersonalMode && (
+                <h1 className={`font-medium tracking-wide ${beautyDemo.className} text-8xl lg:text-9xl`} style={{ color: '#0A7455', lineHeight: '1.0', marginTop: '24px', marginBottom: '18px' }}>
+                  Kaushik
+                </h1>
+              )}
+
+              {/* Bio Text */}
+              <div className={`text-zinc-700 tracking-normal ${archivo.className} text-md lg:text-md`} style={{ fontSize: isPersonalMode ? 'clamp(16px, 3.5vw, 22px)' : 'clamp(14px, 2.5vw, 16px)', lineHeight: '1.7', marginTop: isPersonalMode ? '32px' : '8px', textAlign: 'center' }}>
+                {/* Dark mode: color: '#F3F4F6' instead of text-zinc-700 */}
+                {!isPersonalMode && (
+                  <>
+                    <p style={{ marginTop: '8px' }}>
+                      I’m a <span className="font-bold">Senior Product Designer</span> from Chennai, India with around 6 years of experience turning <span className="font-bold"> Complexity  →  Clarity</span> through user-focused, scalable digital experiences.
+                    </p>
+                    <p style={{ marginTop: '16px' }}>
+                      I specialize in designing human-centered digital experiences across low-code/no-code platforms and fintech, applying systems thinking to create solutions that are both intuitive and accessible. At Appian, I work on enhancing data management experiences within the Data Fabric, helping organizations unify, manage, and leverage their data effectively. Over the years, I’ve collaborated closely with cross-functional teams, guided end-to-end product journeys, and delivered initiatives that drive meaningful impact for users at scale.
+                    </p>
+                  </>
+                )}
               </div>
+
+              {/* Compact Experience Section */}
+              {!isPersonalMode && (
+                <div style={{ marginTop: '28px' }}>
+                  <h3 className={`font-medium tracking-wide ${geistMono.className} text-sm`} style={{ color: '#6B7350', marginBottom: '24px' }}>
+                    Career Journey
+                  </h3>
+                  <div className="flex items-center justify-center">
+                    {WORK_EXPERIENCE.map((job, index) => (
+                      <div key={job.id} className="flex items-center">
+                        <div className="flex flex-col items-center">
+                          <a
+                            href={job.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="transition-all duration-200 hover:opacity-80"
+                            onMouseEnter={(e) => {
+                              if (job.company === 'Appian Corporation') {
+                                const img = e.currentTarget.querySelector('img');
+                                if (img) {
+                                  img.style.filter = 'brightness(0) saturate(100%) invert(18%) sepia(100%) saturate(7482%) hue-rotate(240deg) brightness(100%) contrast(100%)';
+                                }
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (job.company === 'Appian Corporation') {
+                                const img = e.currentTarget.querySelector('img');
+                                if (img) {
+                                  img.style.filter = 'none';
+                                }
+                              }
+                            }}
+                          >
+                            <Image
+                              src={job.logo}
+                              alt={job.company}
+                              width={job.company === 'Appian Corporation' ? 83 : 106}
+                              height={30}
+                              unoptimized
+                              className={`object-contain transition-all duration-200 ${job.company === 'Appian Corporation'
+                                ? 'mr-8'
+                                : 'grayscale hover:grayscale-0'
+                                }
+                            `}
+                              style={{ height: '30px' }}
+                            />
+                          </a>
+                          <div className={`text-xs text-gray-500 text-center ${job.company === 'Appian Corporation' ? 'mr-8' : 'mr-2'}`} style={{ marginTop: '6px' }}>
+                            {job.start} - {job.end}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+
+
+
+
+
             </motion.section>
 
-            {/* Separator */}
-            <div className="flex items-center" style={{ margin: '2rem 0' }}>
-              <div className="flex-1 h-px bg-gray-200"></div>
-              <div className="mx-4 text-2xl separator-icon cursor-pointer" style={{ color: '#0A7455' }}>✽</div>
-              <div className="flex-1 h-px bg-gray-200"></div>
-            </div>
-          </>
-        )}
 
 
 
-        {!isPersonalMode && (
-          <motion.section
-            variants={VARIANTS_SECTION}
-            transition={TRANSITION_SECTION}
-            className="space-y-6"
-          >
-            <div className="flex items-center space-x-3">
-              {SOCIAL_LINKS.map((link) => (
-                <MagneticSocialLink key={link.label} link={link.link}>
-                  {link.label}
-                </MagneticSocialLink>
-              ))}
-            </div>
-          </motion.section>
-        )}
-      </div>
 
-      {/* Right Column - Works Content */}
-      <div
-        className="w-full lg:w-[55%] flex flex-col px-6 pt-12 lg:px-[120px] lg:pt-18"
-      >
-        <motion.section
-          variants={VARIANTS_SECTION}
-          transition={TRANSITION_SECTION}
-          className="flex flex-col h-full overflow-y-auto"
-        >
-          {isPersonalMode ? (
-            // Personal Mode - Vibes Header
-            <div>
-              <h2 className={`font-semibold tracking-wide ${geistMono.className}`} style={{ fontSize: '20px', lineHeight: '1.4' }}>
-                <span className="text-gray-400 line-through">Projects</span>{' '}
-                <span style={{ color: '#0A7455' }}>Vibes</span>
-              </h2>
-            </div>
-          ) : (
-            // Professional Mode - Work Section
-            <div className="flex flex-col">
-              <h2 className={`font-semibold tracking-wide ${geistMono.className}`} style={{ color: '#0A7455', fontSize: '20px', lineHeight: '1.4', marginBottom: '6px' }}>
-                Projects
-              </h2>
+            {!isPersonalMode && (
+              <motion.section
+                variants={VARIANTS_SECTION}
+                transition={TRANSITION_SECTION}
+                className="flex flex-col items-center flex-shrink-0"
+              >
+                {/* Separator */}
+                <div className="flex items-center w-full mb-4 mt-6">
+                  <div className="flex-1 h-px bg-gray-200"></div>
+                  {/* Dark mode: bg-zinc-800 */}
+                  <div
+                    className="mx-6 text-xl cursor-pointer separator-icon"
+                    style={{
+                      color: '#0A7455',
+                      animation: 'spin 8s linear infinite'
+                    }}
+                  >✽</div>
+                  <div className="flex-1 h-px bg-gray-200"></div>
+                  {/* Dark mode: bg-zinc-800 */}
+                </div>
 
-              <p className={`text-gray-600 text-sm ${archivo.className}`} style={{ marginBottom: '18px' }}>
-                To know more about my works, reach me out at{' '}
-                <a href={`mailto:${EMAIL}`} className="text-gray-600 underline hover:text-gray-800 transition-colors">
-                  {EMAIL}
-                </a>
-              </p>
-
-              {/* Projects */}
-              <div>
-                {PROJECTS.map((project, index) => (
-                  <div key={project.id} className={`bg-white rounded-2xl p-6 border border-gray-200 ${index < PROJECTS.length - 1 ? 'mb-6' : ''}`}>
-                    {/* Project Placeholder */}
-                    <div className="w-full h-48 rounded-lg flex items-center justify-center gap-4" style={{ backgroundColor: '#EEF4F2', marginBottom: '26px' }}>
-                      <div className="text-4xl" style={{ color: '#9FADA8' }}>✽</div>
-                      <div className="text-4xl" style={{ color: '#9FADA8' }}>✽</div>
-                      <div className="text-4xl" style={{ color: '#9FADA8' }}>✽</div>
-                    </div>
-
-                    {/* Project Title */}
-                    <h3 className={`font-bold text-xl text-black ${geistMono.className}`} style={{ marginBottom: '4px' }}>
-                      {project.name}
-                    </h3>
-
-                    {/* Project Description */}
-                    <p className={`text-gray-600 text-sm ${archivo.className}`} style={{ lineHeight: '1.5', marginBottom: '26px' }}>
-                      {project.description}
-                    </p>
-
-                    {/* Action Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-0">
+                  {SOCIAL_LINKS.filter(link => link.label !== 'Instagram' && link.label !== 'X.com').map((link, index, filteredArray) => (
+                    <span key={link.label} className="flex items-center">
                       <a
-                        href={project.link}
+                        href={link.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`${project.video ? 'sm:flex-1' : 'w-full'} w-full bg-zinc-200 text-zinc-700 px-4 py-2 rounded-sm font-medium transition-colors duration-200 hover:bg-zinc-300 ${archivo.className} flex items-center justify-center gap-2`}
+                        className={`${archivo.className} text-zinc-600 hover:text-[#0A7455] transition-colors duration-200 flex items-center gap-1 text-sm`}
+                      // Dark mode: text-zinc-400
                       >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                          <polyline points="14,2 14,8 20,8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                        Read Documentation
-                      </a>
-                      {project.video && (
-                        <a
-                          href={project.video}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`w-full sm:flex-1 bg-[#0A7455] text-white px-4 py-2 rounded-sm font-medium transition-colors duration-200 hover:bg-[#0A7455]/90 ${archivo.className} flex items-center justify-center gap-2`}
+                        {link.label}
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 15 15"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-3 w-3"
                         >
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <polygon points="5,3 19,12 5,21" fill="currentColor" />
-                          </svg>
-                          View Demo
-                        </a>
+                          <path
+                            d="M3.64645 11.3536C3.45118 11.1583 3.45118 10.8417 3.64645 10.6465L10.2929 4L6 4C5.72386 4 5.5 3.77614 5.5 3.5C5.5 3.22386 5.72386 3 6 3L11.5 3C11.6326 3 11.7598 3.05268 11.8536 3.14645C11.9473 3.24022 12 3.36739 12 3.5L12 9.00001C12 9.27615 11.7761 9.50001 11.5 9.50001C11.2239 9.50001 11 9.27615 11 9.00001V4.70711L4.35355 11.3536C4.15829 11.5488 3.84171 11.5488 3.64645 11.3536Z"
+                            fill="currentColor"
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </a>
+                      {index < filteredArray.length - 1 && (
+                        <span className="mx-3 text-zinc-400 hidden sm:inline">•</span>
+                        /* Dark mode: text-zinc-600 */
                       )}
+                    </span>
+                  ))}
+                </div>
+              </motion.section>
+            )}
+          </div>
+
+          {/* Right Column - Works Content */}
+          <div
+            className="w-full lg:w-[55%] flex flex-col px-6 pt-12 pb-16 lg:px-16 lg:pt-18 lg:pb-24 overflow-y-auto"
+          // Dark mode: style={{ backgroundColor: '#111111' }}
+          >
+            <motion.section
+              variants={VARIANTS_SECTION}
+              transition={TRANSITION_SECTION}
+              className="flex flex-col justify-start"
+            >
+              <div className="flex flex-col">
+                <div className="flex justify-center space-x-8" style={{ marginBottom: '28px' }}>
+                  <button
+                    onClick={() => setActiveTab('case-studies')}
+                    className={`pb-2 px-1 ${activeTab === 'case-studies' ? 'font-semibold' : 'font-medium'} tracking-wide ${geistMono.className} text-sm border-b-2 border-transparent transition-colors relative cursor-pointer ${activeTab !== 'case-studies' ? 'hover:text-gray-700 group' : ''}`}
+                    style={{ color: activeTab === 'case-studies' ? '#0A7455' : '#6B7350' }}
+                  >
+                    Selected Works
+                    {activeTab === 'case-studies' && (
+                      <div
+                        className="absolute bottom-0 left-0 right-0 h-1"
+                        style={{
+                          background: `url("data:image/svg+xml,%3csvg width='40' height='8' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M0,4 Q10,0 20,4 T40,4' stroke='%230A7455' stroke-width='3' fill='none' stroke-linecap='round'/%3e%3c/svg%3e")`,
+                          backgroundSize: '20px 4px',
+                          backgroundRepeat: 'repeat-x'
+                        }}
+                      />
+                    )}
+                    {activeTab !== 'case-studies' && (
+                      <div
+                        className="absolute bottom-0 left-0 right-0 h-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        style={{
+                          background: `url("data:image/svg+xml,%3csvg width='40' height='8' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M0,4 Q10,0 20,4 T40,4' stroke='%23666666' stroke-width='3' fill='none' stroke-linecap='round'/%3e%3c/svg%3e")`,
+                          backgroundSize: '20px 4px',
+                          backgroundRepeat: 'repeat-x'
+                        }}
+                      />
+                    )}
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('visual-snippets')}
+                    className={`pb-2 px-1 ${activeTab === 'visual-snippets' ? 'font-semibold' : 'font-medium'} tracking-wide ${geistMono.className} text-sm border-b-2 border-transparent transition-colors relative cursor-pointer ${activeTab !== 'visual-snippets' ? 'hover:text-gray-700 group' : ''}`}
+                    style={{ color: activeTab === 'visual-snippets' ? '#0A7455' : '#6B7350' }}
+                  >
+                    Visual Snippets
+                    {activeTab === 'visual-snippets' && (
+                      <div
+                        className="absolute bottom-0 left-0 right-0 h-1"
+                        style={{
+                          background: `url("data:image/svg+xml,%3csvg width='40' height='8' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M0,4 Q10,0 20,4 T40,4' stroke='%230A7455' stroke-width='3' fill='none' stroke-linecap='round'/%3e%3c/svg%3e")`,
+                          backgroundSize: '20px 4px',
+                          backgroundRepeat: 'repeat-x'
+                        }}
+                      />
+                    )}
+                    {activeTab !== 'visual-snippets' && (
+                      <div
+                        className="absolute bottom-0 left-0 right-0 h-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        style={{
+                          background: `url("data:image/svg+xml,%3csvg width='40' height='8' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M0,4 Q10,0 20,4 T40,4' stroke='%23666666' stroke-width='3' fill='none' stroke-linecap='round'/%3e%3c/svg%3e")`,
+                          backgroundSize: '20px 4px',
+                          backgroundRepeat: 'repeat-x'
+                        }}
+                      />
+                    )}
+                  </button>
+                </div>
+
+
+
+                {/* Tab Content */}
+                <div style={{ marginTop: '24px' }}>
+                  {activeTab === 'case-studies' && (
+                    <div className="relative">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {PROJECTS.map((project, index) => (
+                          <div key={project.id} className="bg-white rounded-2xl border border-gray-200 flex flex-col h-full overflow-hidden">
+                            {/* Thumbnail Image */}
+                            <div className="w-full h-48 overflow-hidden">
+                              <Image
+                                src={project.image}
+                                alt={project.name}
+                                width={400}
+                                height={240}
+                                className="w-full h-full object-cover"
+                                priority={index < 2}
+                                onError={(e) => {
+                                  console.error('Image failed to load:', project.image, e);
+                                }}
+                              />
+                            </div>
+
+                            {/* Content with padding */}
+                            <div className="p-6 flex flex-col flex-grow">
+
+                              {/* Company | Shipped | Year */}
+                              <p className={`text-gray-500 ${archivo.className}`} style={{ fontSize: '14px', marginBottom: '4px' }}>
+                                {project.company} &nbsp;•&nbsp; {project.status} &nbsp;•&nbsp; {project.year}
+                              </p>
+
+                              {/* Title */}
+                              <h3 className={`font-bold text-black ${archivo.className}`} style={{ fontSize: '20px', marginBottom: '16px' }}>
+                                {project.name}
+                              </h3>
+
+                              {/* Description */}
+                              <p className={`text-gray-600 ${archivo.className} flex-grow`} style={{ fontSize: '16px', lineHeight: '1.5', marginBottom: '16px' }}>
+                                {project.description}
+                              </p>
+
+                              {/* Action Links */}
+                              <div className="flex items-center mt-auto">
+                                {project.caseStudyLink ? (
+                                  <a
+                                    href={project.caseStudyLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`transition-colors duration-200 hover:underline ${archivo.className}`}
+                                    style={{ color: '#0A7455', fontSize: '16px' }}
+                                  >
+                                    View Case Study
+                                  </a>
+                                ) : (
+                                  <span className={`text-gray-400 ${archivo.className} flex items-center gap-1`} style={{ fontSize: '16px' }}>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M6 10V8C6 5.79086 7.79086 4 10 4H14C16.2091 4 18 5.79086 18 8V10M5 10H19C19.5523 10 20 10.4477 20 11V19C20 19.5523 19.5523 20 19 20H5C4.44772 20 4 19.5523 4 19V11C4 10.4477 4.44772 10 5 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                    View Case Study
+                                  </span>
+                                )}
+                                {project.id !== 'project4' && (
+                                  <>
+                                    <span className={`mx-2 text-gray-400 ${archivo.className}`} style={{ fontSize: '16px' }}>•</span>
+                                    <a
+                                      href={project.link}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className={`transition-colors duration-200 hover:underline ${archivo.className}`}
+                                      style={{ color: '#0A7455', fontSize: '16px' }}
+                                    >
+                                      Documentation
+                                    </a>
+                                  </>
+                                )}
+                                {project.video && (
+                                  <>
+                                    <span className={`mx-2 text-gray-400 ${archivo.className}`} style={{ fontSize: '16px' }}>•</span>
+                                    <a
+                                      href={project.video}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className={`transition-colors duration-200 hover:underline ${archivo.className}`}
+                                      style={{ color: '#0A7455', fontSize: '16px' }}
+                                    >
+                                      Demo
+                                    </a>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+
                     </div>
-                  </div>
-                ))}
+                  )}
+
+                  {activeTab === 'visual-snippets' && (
+                    <div className="relative">
+                      <div className={`text-center mb-8 -mt-2 text-gray-400 ${archivo.className}`} style={{ fontSize: '14px' }}>
+                        A few visual highlights from my design work
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {VISUAL_SNIPPETS.map((snippet, index) => (
+                          <div key={snippet.id} className="w-full h-auto bg-white border border-gray-200 overflow-hidden rounded-lg">
+                            <Image
+                              src={snippet.image}
+                              alt={snippet.title}
+                              width={900}
+                              height={600}
+                              className="w-full h-full object-contain cursor-pointer rounded-lg"
+                              priority={index < 2}
+                              onClick={() => {
+                                setEnlargedImage(snippet.image)
+                                setCurrentImageIndex(index)
+                                analyzeImageBrightness(snippet.image)
+                              }}
+                              onMouseEnter={(e) => setTooltip({ show: true, x: e.clientX, y: e.clientY })}
+                              onMouseLeave={() => setTooltip({ show: false, x: 0, y: 0 })}
+                              onMouseMove={(e) => {
+                                setTooltip({ show: true, x: e.clientX, y: e.clientY });
+                              }}
+                              onError={(e) => {
+                                console.error('Image failed to load:', snippet.image, e);
+                              }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
+            </motion.section>
+          </div>
+        </motion.main>
+      )
+      }
+
+      {/* Tooltip */}
+      {tooltip.show && (
+        <div
+          className="fixed z-40 pointer-events-none text-white text-xs px-3 py-2 rounded-full"
+          style={{
+            backgroundColor: '#0A7455',
+            left: tooltip.x - 50,
+            top: tooltip.y + 20,
+          }}
+        >
+          Click to enlarge
+        </div>
+      )}
+
+      {/* Image Modal */}
+      <AnimatePresence>
+        {enlargedImage && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setEnlargedImage(null)}
+          >
+            <div className="relative flex items-center justify-center w-full h-full max-w-screen-xl">
+              {/* Previous arrow - outside image */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  navigateImage('prev')
+                }}
+                className="absolute left-4 z-10 text-2xl font-medium opacity-60 hover:opacity-100 transition-opacity duration-200 rounded-full w-10 h-10 flex items-center justify-center"
+                style={{
+                  lineHeight: '1',
+                  backgroundColor: '#94BDB2',
+                  color: '#325E52'
+                }}
+              >
+                ‹
+              </button>
+
+              {/* Image container */}
+              <motion.div
+                className="relative max-w-7xl max-h-full"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Image
+                  src={enlargedImage}
+                  alt="Enlarged visual snippet"
+                  width={1200}
+                  height={800}
+                  className="w-full h-auto max-h-[90vh] object-contain rounded-lg"
+                  quality={100}
+                />
+
+                {/* Close button */}
+                <button
+                  onClick={() => setEnlargedImage(null)}
+                  className="absolute top-4 right-4 text-2xl font-medium opacity-60 hover:opacity-100 transition-opacity duration-200"
+                  style={{
+                    color: '#325E52'
+                  }}
+                >
+                  ×
+                </button>
+
+
+              </motion.div>
+
+              {/* Next arrow - outside image */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  navigateImage('next')
+                }}
+                className="absolute right-4 z-10 text-2xl font-medium opacity-60 hover:opacity-100 transition-opacity duration-200 rounded-full w-10 h-10 flex items-center justify-center"
+                style={{
+                  lineHeight: '1',
+                  backgroundColor: '#94BDB2',
+                  color: '#325E52'
+                }}
+              >
+                ›
+              </button>
             </div>
-          )}
-        </motion.section>
-      </div>
-    </motion.main>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+
+      {/* Loading Screen with Blur Effect - Overlay */}
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+          >
+            {/* Blurred Background */}
+            <div
+              className="absolute inset-0 bg-white/40"
+              style={{
+                backdropFilter: 'blur(35px)',
+                WebkitBackdropFilter: 'blur(35px)'
+              }}
+            />
+
+            {/* Loading Content */}
+            <div className="relative z-10 flex flex-col items-center justify-center min-h-screen">
+              {/* Loading Icon */}
+              <motion.div
+                className="mb-3"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              >
+                <motion.div
+                  className="text-5xl"
+                  style={{
+                    color: '#0A7455',
+                    transformOrigin: 'center center'
+                  }}
+                  animate={{ rotate: 360 }}
+                  transition={{
+                    duration: 2.2,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                >
+                  ✻
+                </motion.div>
+              </motion.div>
+
+              {/* Loading Text */}
+              <motion.div
+                className={`text-center ${archivo.className}`}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+              >
+                <div className="text-3xl font-medium" style={{ color: '#0A7455' }}>
+                  Making things pop, tastefully
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   )
 }
