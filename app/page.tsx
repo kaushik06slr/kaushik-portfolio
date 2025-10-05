@@ -60,58 +60,7 @@ export default function Personal() {
   const [isLoading, setIsLoading] = useState(true)
   const [enlargedImage, setEnlargedImage] = useState<string | null>(null)
   const [tooltip, setTooltip] = useState({ show: false, x: 0, y: 0 })
-  const [iconColor, setIconColor] = useState('white')
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
-
-  // Function to analyze image brightness and set icon color
-  const analyzeImageBrightness = (imageSrc: string) => {
-    if (typeof window === 'undefined') return // Only run on client side
-
-    try {
-      const img = new window.Image()
-      img.crossOrigin = 'anonymous'
-      img.onload = () => {
-        const canvas = document.createElement('canvas')
-        const ctx = canvas.getContext('2d')
-        if (!ctx) return
-
-        canvas.width = img.width
-        canvas.height = img.height
-        ctx.drawImage(img, 0, 0)
-
-        try {
-          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-          const data = imageData.data
-          let totalBrightness = 0
-
-          // Sample pixels for performance (every 10th pixel)
-          for (let i = 0; i < data.length; i += 40) {
-            const r = data[i]
-            const g = data[i + 1]
-            const b = data[i + 2]
-            // Calculate perceived brightness using luminance formula
-            const brightness = (0.299 * r + 0.587 * g + 0.114 * b)
-            totalBrightness += brightness
-          }
-
-          const avgBrightness = totalBrightness / (data.length / 40)
-          // If average brightness > 128, use dark icon; otherwise use light icon
-          setIconColor(avgBrightness > 128 ? '#333333' : 'white')
-        } catch (error) {
-          // Fallback to white if canvas analysis fails
-          setIconColor('white')
-        }
-      }
-      img.onerror = () => {
-        // Fallback to white if image fails to load
-        setIconColor('white')
-      }
-      img.src = imageSrc
-    } catch (error) {
-      // Fallback to white if any error occurs
-      setIconColor('white')
-    }
-  }
 
   // Navigation functions for image modal
   const navigateImage = (direction: 'prev' | 'next') => {
@@ -127,7 +76,6 @@ export default function Personal() {
     const newImage = VISUAL_SNIPPETS[newIndex].image
     setEnlargedImage(newImage)
     setCurrentImageIndex(newIndex)
-    analyzeImageBrightness(newImage)
   }
 
   // Keyboard navigation
@@ -502,7 +450,7 @@ export default function Personal() {
                     Career Journey
                   </h3>
                   <div className="flex items-center justify-center">
-                    {WORK_EXPERIENCE.map((job, index) => (
+                    {WORK_EXPERIENCE.map((job) => (
                       <div key={job.id} className="flex items-center">
                         <div className="flex flex-col items-center">
                           <a
@@ -807,7 +755,6 @@ export default function Personal() {
                               onClick={() => {
                                 setEnlargedImage(snippet.image)
                                 setCurrentImageIndex(index)
-                                analyzeImageBrightness(snippet.image)
                               }}
                               onMouseEnter={(e) => setTooltip({ show: true, x: e.clientX, y: e.clientY })}
                               onMouseLeave={() => setTooltip({ show: false, x: 0, y: 0 })}
