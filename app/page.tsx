@@ -201,7 +201,7 @@ export default function Personal() {
                     >
                       <div className="overflow-hidden" style={{ width: '280px', height: '350px' }}>
                         <Image
-                          src={`/About Me/${image}`}
+                          src={`/About me/${image}`}
                           alt={image.replace(/\.(jpeg|jpg)$/, '')}
                           width={280}
                           height={350}
@@ -241,7 +241,7 @@ export default function Personal() {
                     >
                       <div className="overflow-hidden" style={{ width: '280px', height: '350px' }}>
                         <Image
-                          src={`/About Me/${image}`}
+                          src={`/About me/${image}`}
                           alt={image.replace(/\.(jpeg|jpg)$/, '')}
                           width={280}
                           height={350}
