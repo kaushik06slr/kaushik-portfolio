@@ -1,40 +1,80 @@
-<img src="/public/cover.jpg" alt="Cover image representing Nim, a personal website template" width="100%" />
+# Kaushik's Portfolio
 
-Nim is a free and open-source personal website template built with Next.js 15, React 19, Tailwind CSS v4, and Motion. Designed for developers, designers, and founders, it combines minimalism with delightful animated components powered by [Motion-Primitives](https://motion-primitives.com).
+> **Senior Product Designer** turning **Complexity → Clarity** through user-focused, scalable digital experiences.
 
-Live demo: [https://nim-fawn.vercel.app](https://nim-fawn.vercel.app)
+A modern, interactive portfolio website showcasing my 6+ years of experience in Product (UX) Design, built with Next.js 15, React 19, Tailwind CSS, and Motion.
 
-## Features
+🌐 **Live Website:** [kaushikr.vercel.app](https://kaushikr.vercel.app) *(Update with your actual URL)*
 
-- Minimal one-page portfolio layout.
-- Blog support with MDX.
-- Responsive and accessible design.
-- Easy to use
-- [Motion-Primitives](https://motion-primitives.com) for animated components.
+## 👋 About Me
 
-## Getting Started
+I'm Kaushik, a Senior Product Designer from Chennai, India, specializing in designing human-centered digital experiences across low-code/no-code platforms and fintech. Currently at **Appian Corporation**, I work on enhancing data management experiences within the Data Fabric, helping organizations unify, manage, and leverage their data effectively.
 
-For detailed setup instructions, refer to the [Installation Guide](./INSTALLATION.md).
+### 🎯 What I Do
+- **Product Design** - End-to-end user experience design
+- **Systems Thinking** - Creating scalable, intuitive solutions  
+- **Cross-functional Collaboration** - Working with engineering, product, and business teams
+- **Data Management UX** - Specializing in complex data workflows and interfaces
+
+## 🏃‍♂️ Getting Started
 
 ```bash
-git clone https://github.com/ibelick/nim.git
-cd nim
+# Clone the repository
+git clone https://github.com/kaushik06slr/kaushik-portfolio.git
+cd kaushik-portfolio
+
+# Install dependencies
 npm install
+
+# Start development server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the website.
 
-## Contributing
+## 📁 Project Structure
 
-Contributions are welcome! Feel free to open issues or submit pull requests to improve Nim.
+```
+├── app/
+│   ├── fonts/           # Custom font files
+│   ├── page.tsx         # Main portfolio page
+│   ├── data.ts          # Portfolio content data
+│   └── globals.css      # Global styles
+├── components/
+│   └── ui/              # Reusable UI components
+├── public/
+│   ├── About me/        # Personal photos for carousel
+│   └── Visual Snippets/ # Design work showcase
+└── README.md
+```
 
-## Deployment
+## 🎨 Customization
 
-You can deploy your site to any hosting platform that supports Next.js. For the easiest deployment experience, consider using Vercel:
+To adapt this portfolio for your own use:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fibelick%2Fnim&env=NEXT_PUBLIC_SITE_URL&project-name=nim&repository-name=nim&redirect-url=https%3A%2F%2Ftwitter.com%2Fibelick&demo-title=Nim&demo-description=Nim%20is%20a%20free%20and%20open-source%20minimal%20personal%20website%20template%20built%20with%20Next.js%2015%2C%20React%2019%2C%20and%20Motion-Primitives.&demo-url=https%3A%2F%2Fnim.vercel.app&demo-image=https%3A%2F%2Fraw.githubusercontent.com%2Fibelick%2Fnim%2Frefs%2Fheads%2Fmain%2F.github%2Fassets%2Freadme.png&teamSlug=ibelick)
+1. **Update content** in `app/data.ts`
+2. **Replace images** in `public/` folders
+3. **Modify colors** in `app/globals.css` and component files
+4. **Update fonts** in `app/page.tsx` and `app/layout.tsx`
 
-## About
+## 📱 Connect With Me
 
-Nim is designed to make personal branding effortless and beautiful. If you enjoy it, consider sharing it and exploring [Motion-Primitives Pro](https://pro.motion-primitives.com/).
+- **Email:** [kaushik06slr@gmail.com](mailto:kaushik06slr@gmail.com)
+- **LinkedIn:** [linkedin.com/in/kaushikslr](https://www.linkedin.com/in/kaushikslr)
+- **Instagram:** [@kaushikslr](https://www.instagram.com/kaushikslr)
+- **X (Twitter):** [@kaushik06slr](https://twitter.com/kaushik06slr)
+- **Resume:** [View Resume](https://drive.google.com/file/d/1O5uGDFgDURL7EGClXaPLLWuXSis-Uagf/view?usp=drive_link)
+
+## 🚀 Deployment
+
+Deploy to Vercel with one click:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fkaushik06slr%2Fkaushik-portfolio)
+
+Or deploy to any platform that supports Next.js applications.
+
+---
+
+**Designed with love ❤️, Co-built with Claude 🤖**
+
+*This portfolio showcases the intersection of thoughtful design and technical implementation, reflecting my approach to creating user-centered digital experiences.*
