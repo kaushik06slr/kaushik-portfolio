@@ -63,6 +63,7 @@ export default function Personal() {
   const [isLoading, setIsLoading] = useState(true)
   const [enlargedImage, setEnlargedImage] = useState<string | null>(null)
   const [tooltip, setTooltip] = useState({ show: false, x: 0, y: 0 })
+  const [caseStudyTooltip, setCaseStudyTooltip] = useState({ show: false, x: 0, y: 0 })
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   // Navigation functions for image modal
@@ -132,6 +133,20 @@ export default function Personal() {
     }
   }, [isLoading])
 
+  // Prevent body scroll when in personal mode
+  useEffect(() => {
+    if (isPersonalMode) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isPersonalMode])
+
 
 
   return (
@@ -140,7 +155,7 @@ export default function Personal() {
       {isPersonalMode ? (
         // Personal Mode - Bio and Postcards Layout
         <motion.main
-          className="min-h-screen relative px-2 py-4 sm:px-4 sm:py-6 lg:px-8 lg:py-6"
+          className="min-h-screen flex flex-col lg:flex-row overflow-hidden"
           style={{ backgroundColor: '#FAFCFC' }}
           variants={VARIANTS_CONTAINER}
           initial="hidden"
@@ -173,149 +188,309 @@ export default function Personal() {
                 </label>
               </div>
               <span className={`text-xs lg:text-sm ${dmSans.className}`}>
-                <span className="text-zinc-900">Behind pixels.</span>{' '}
+                <span className="text-zinc-900 font-bold">Behind pixels.</span>{' '}
                 <span className="text-zinc-600">A little about me, off the grid</span>
               </span>
             </div>
           </div>
 
-          {/* Horizontal Carousel Layout */}
-          <div className="relative w-full h-screen flex flex-col mt-2">
-            {/* Top Section - About Me Heading */}
+          {/* Left Section - 60% - Carousel */}
+          <div className="w-full lg:w-[60%] min-h-screen flex flex-col px-4 py-4 lg:px-8 lg:py-8 overflow-hidden" style={{ paddingTop: '80px' }}>
             <motion.div
               variants={VARIANTS_SECTION}
               transition={TRANSITION_SECTION}
-              className="bg-#FAFCFC pt-8 px-4 sm:pt-12 sm:px-8"
-              style={{ paddingBottom: '32px' }}
+              className="w-full"
             >
-              <div className="max-w-4xl mx-auto text-center">
-                <h1 className={`text-4xl sm:text-5xl lg:text-6xl ${beautyDemo.className} mb-1`} style={{ color: '#0A7455' }}>
-                  Life in postcards ✨
-                </h1>
-              </div>
-            </motion.div>
+              {/* Three Column Vertical Carousel */}
+              <div className="flex justify-between gap-6 lg:gap-8 w-full">
+                {/* Column 1 - 5 photos - Moving Down */}
+                <div className="relative h-screen overflow-hidden flex-1">
+                  <div className="flex flex-col gap-4 lg:gap-6 animate-marquee-vertical-down">
+                    {[
+                      "Thailand 🇹🇭.jpeg",
+                      "☕️.jpeg",
+                      "Golden Gate Bridge 🌁.jpeg",
+                      "It's me again! 🙋🏻‍♂️.jpeg",
+                      "Mysore.jpeg"
+                    ].map((image, index) => (
+                      <div
+                        key={image}
+                        className="bg-white border border-gray-200 animate-float-up"
+                        style={{
+                          padding: '12px 12px 20px 12px',
+                          boxShadow: '0 1px 2px 0 rgba(111, 111, 111, 0.05)',
+                          animationDelay: `${index * 0.1}s`,
+                          marginTop: image === "It's me again! 🙋🏻‍♂️.jpeg" ? '4px' : '0'
+                        }}
+                      >
+                        <div className="overflow-hidden w-full" style={{ height: '280px' }}>
+                          <Image
+                            src={`/About me/${image}`}
+                            alt={image.replace(/\.(jpeg|jpg)$/, '')}
+                            width={240}
+                            height={280}
+                            className="w-full h-full object-cover"
+                            quality={100}
+                          />
+                        </div>
+                        <div className="mt-2">
+                          <div className={`text-gray-400 text-xs ${geistMono.className}`}>
+                            {image.replace(/\.(jpeg|jpg)$/, '')}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    {/* Duplicate set for seamless loop */}
+                    {[
+                      "Thailand 🇹🇭.jpeg",
+                      "☕️.jpeg",
+                      "Golden Gate Bridge 🌁.jpeg",
+                      "It's me again! 🙋🏻‍♂️.jpeg",
+                      "Mysore.jpeg"
+                    ].map((image, index) => (
+                      <div
+                        key={`duplicate-${image}`}
+                        className="bg-white border border-gray-200"
+                        style={{
+                          padding: '12px 12px 20px 12px',
+                          boxShadow: '0 1px 2px 0 rgba(111, 111, 111, 0.05)',
+                          marginTop: image === "It's me again! 🙋🏻‍♂️.jpeg" ? '4px' : '0'
+                        }}
+                      >
+                        <div className="overflow-hidden w-full" style={{ height: '280px' }}>
+                          <Image
+                            src={`/About me/${image}`}
+                            alt={image.replace(/\.(jpeg|jpg)$/, '')}
+                            width={240}
+                            height={280}
+                            className="w-full h-full object-cover"
+                            quality={100}
+                          />
+                        </div>
+                        <div className="mt-2">
+                          <div className={`text-gray-400 text-xs ${geistMono.className}`}>
+                            {image.replace(/\.(jpeg|jpg)$/, '')}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
-            {/* Middle Section - Marquee Carousel */}
-            <motion.div
-              variants={VARIANTS_SECTION}
-              transition={TRANSITION_SECTION}
-              className="flex items-center px-4 sm:px-8"
-              style={{ paddingTop: '0px', paddingBottom: '26px' }}
-            >
-              {/* Marquee container */}
-              <div className="w-full overflow-hidden">
-                <div className="flex space-x-6 animate-marquee" style={{ width: 'max-content' }}>
-                  {/* First set of images */}
-                  {[
-                    "Thailand 🇹🇭.jpeg",
-                    "☕️.jpeg",
-                    "Golden Gate Bridge 🌁.jpeg",
-                    "It's me again! 🙋🏻‍♂️.jpeg",
-                    "Mysore.jpeg",
-                    "🤘🎸.jpeg",
-                    "Carmel by the Sea.jpeg",
-                    "🍿🎬.jpeg",
-                    "New York 🇺🇸.jpeg",
-                    "✨.jpeg",
-                    "Appian HQ 💼.jpeg",
-                    "Chennai ❤️.jpeg"
-                  ].map((image) => (
-                    <div
-                      key={image}
-                      className="flex-shrink-0 bg-white border border-gray-200"
-                      style={{ padding: '12px 12px 24px 12px', boxShadow: '0 1px 2px 0 rgba(111, 111, 111, 0.05)' }}
-                    >
-                      <div className="overflow-hidden" style={{ width: '280px', height: '350px' }}>
-                        <Image
-                          src={`/About me/${image}`}
-                          alt={image.replace(/\.(jpeg|jpg)$/, '')}
-                          width={280}
-                          height={350}
-                          className="w-full h-full object-cover"
-                          quality={100}
-                        />
-                      </div>
-                      {/* Caption outside image */}
-                      <div className="mt-3">
-                        <div className={`text-gray-400 text-xs ${geistMono.className}`}>
-                          {image.replace(/\.(jpeg|jpg)$/, '')}
+                {/* Column 2 - 4 photos - Moving Up */}
+                <div className="relative h-screen overflow-hidden flex-1" style={{ marginTop: '40px' }}>
+                  <div className="flex flex-col gap-4 lg:gap-6 animate-marquee-vertical-up">
+                    {[
+                      "🤘🎸.jpeg",
+                      "Carmel by the Sea.jpeg",
+                      "🍿🎬.jpeg",
+                      "New York 🇺🇸.jpeg"
+                    ].map((image, index) => (
+                      <div
+                        key={image}
+                        className="bg-white border border-gray-200 animate-float-up"
+                        style={{
+                          padding: '12px 12px 20px 12px',
+                          boxShadow: '0 1px 2px 0 rgba(111, 111, 111, 0.05)',
+                          animationDelay: `${(index + 5) * 0.1}s`
+                        }}
+                      >
+                        <div className="overflow-hidden w-full" style={{ height: '280px' }}>
+                          <Image
+                            src={`/About me/${image}`}
+                            alt={image.replace(/\.(jpeg|jpg)$/, '')}
+                            width={240}
+                            height={280}
+                            className="w-full h-full object-cover"
+                            quality={100}
+                          />
+                        </div>
+                        <div className="mt-2">
+                          <div className={`text-gray-400 text-xs ${geistMono.className}`}>
+                            {image.replace(/\.(jpeg|jpg)$/, '')}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                  {/* Duplicate set for seamless loop */}
-                  {[
-                    "Thailand 🇹🇭.jpeg",
-                    "☕️.jpeg",
-                    "Golden Gate Bridge 🌁.jpeg",
-                    "It's me again! 🙋🏻‍♂️.jpeg",
-                    "Mysore.jpeg",
-                    "🤘🎸.jpeg",
-                    "Carmel by the Sea.jpeg",
-                    "🍿🎬.jpeg",
-                    "New York 🇺🇸.jpeg",
-                    "✨.jpeg",
-                    "Appian HQ 💼.jpeg",
-                    "Chennai ❤️.jpeg"
-                  ].map((image) => (
-                    <div
-                      key={`duplicate-${image}`}
-                      className="flex-shrink-0 bg-white border border-gray-200"
-                      style={{ padding: '12px 12px 24px 12px', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}
-                    >
-                      <div className="overflow-hidden" style={{ width: '280px', height: '350px' }}>
-                        <Image
-                          src={`/About me/${image}`}
-                          alt={image.replace(/\.(jpeg|jpg)$/, '')}
-                          width={280}
-                          height={350}
-                          className="w-full h-full object-cover"
-                          quality={100}
-                        />
-                      </div>
-                      {/* Caption outside image */}
-                      <div className="mt-3">
-                        <div className={`text-gray-400 text-xs ${geistMono.className}`}>
-                          {image.replace(/\.(jpeg|jpg)$/, '')}
+                    ))}
+                    {/* Duplicate set for seamless loop */}
+                    {[
+                      "🤘🎸.jpeg",
+                      "Carmel by the Sea.jpeg",
+                      "🍿🎬.jpeg",
+                      "New York 🇺🇸.jpeg"
+                    ].map((image, index) => (
+                      <div
+                        key={`duplicate-${image}`}
+                        className="bg-white border border-gray-200"
+                        style={{
+                          padding: '12px 12px 20px 12px',
+                          boxShadow: '0 1px 2px 0 rgba(111, 111, 111, 0.05)'
+                        }}
+                      >
+                        <div className="overflow-hidden w-full" style={{ height: '280px' }}>
+                          <Image
+                            src={`/About me/${image}`}
+                            alt={image.replace(/\.(jpeg|jpg)$/, '')}
+                            width={240}
+                            height={280}
+                            className="w-full h-full object-cover"
+                            quality={100}
+                          />
+                        </div>
+                        <div className="mt-2">
+                          <div className={`text-gray-400 text-xs ${geistMono.className}`}>
+                            {image.replace(/\.(jpeg|jpg)$/, '')}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                </div>
+
+                {/* Column 3 - 4 photos - Moving Down */}
+                <div className="relative h-screen overflow-hidden flex-1">
+                  <div className="flex flex-col gap-4 lg:gap-6 animate-marquee-vertical-down">
+                    {[
+                      "✨.jpeg",
+                      "Appian HQ 💼.jpeg",
+                      "Chennai ❤️.jpeg",
+                      "Thailand 🇹🇭.jpeg"
+                    ].map((image, index) => (
+                      <div
+                        key={image}
+                        className="bg-white border border-gray-200 animate-float-up"
+                        style={{
+                          padding: '12px 12px 20px 12px',
+                          boxShadow: '0 1px 2px 0 rgba(111, 111, 111, 0.05)',
+                          animationDelay: `${(index + 9) * 0.1}s`
+                        }}
+                      >
+                        <div className="overflow-hidden w-full" style={{ height: '280px' }}>
+                          <Image
+                            src={`/About me/${image}`}
+                            alt={image.replace(/\.(jpeg|jpg)$/, '')}
+                            width={240}
+                            height={280}
+                            className="w-full h-full object-cover"
+                            quality={100}
+                          />
+                        </div>
+                        <div className="mt-2">
+                          <div className={`text-gray-400 text-xs ${geistMono.className}`}>
+                            {image.replace(/\.(jpeg|jpg)$/, '')}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    {/* Duplicate set for seamless loop */}
+                    {[
+                      "✨.jpeg",
+                      "Appian HQ 💼.jpeg",
+                      "Chennai ❤️.jpeg",
+                      "Thailand 🇹🇭.jpeg"
+                    ].map((image, index) => (
+                      <div
+                        key={`duplicate-${image}`}
+                        className="bg-white border border-gray-200"
+                        style={{
+                          padding: '12px 12px 20px 12px',
+                          boxShadow: '0 1px 2px 0 rgba(111, 111, 111, 0.05)'
+                        }}
+                      >
+                        <div className="overflow-hidden w-full" style={{ height: '280px' }}>
+                          <Image
+                            src={`/About me/${image}`}
+                            alt={image.replace(/\.(jpeg|jpg)$/, '')}
+                            width={240}
+                            height={280}
+                            className="w-full h-full object-cover"
+                            quality={100}
+                          />
+                        </div>
+                        <div className="mt-2">
+                          <div className={`text-gray-400 text-xs ${geistMono.className}`}>
+                            {image.replace(/\.(jpeg|jpg)$/, '')}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </motion.div>
+          </div>
 
-            {/* Bottom Section - Bio Content */}
+          {/* Right Section - 40% - Bio Content */}
+          <div className="w-full lg:w-[40%] h-screen flex flex-col px-6 py-8 lg:px-8 lg:py-12 overflow-hidden" style={{ paddingTop: '80px' }}>
             <motion.div
               variants={VARIANTS_SECTION}
               transition={TRANSITION_SECTION}
-              className="bg-#FAFCFC pb-8 px-4 sm:pb-12 sm:px-8"
-              style={{ paddingTop: '0px' }}
+              className="flex flex-col justify-between h-full max-w-lg"
             >
-              <div className="max-w-7xl mx-auto text-center" style={{ paddingTop: '24px' }}>
-                <div className={`text-zinc-700 ${dmSans.className} px-2 sm:px-4`} style={{ fontSize: 'clamp(14px, 2.5vw, 18px)', lineHeight: '1.6', textAlign: 'center' }}>
-                  <p className="mb-3">
-                    Hello again 👋 I’m Kaushik! I’m based out of Chennai, Tamil Nadu. Like many Indian kids, I studied engineering — but somewhere along the way, I stumbled into design. It started with me making random posters in Photoshop and Illustrator, and before I knew it, that little hobby led me into Product (aka UX) Design. And well… that’s now my full-blown career 😅.
+              <div>
+                {/* Title */}
+                <div className="mb-6 lg:mb-8">
+                  <h1 className={`text-3xl sm:text-3xl lg:text-3xl ${dmSans.className} mb-2`}>
+                    <span className="font-normal text-zinc-500">Hey! I'm </span>
+                    <span className="font-bold" style={{ color: '#0A7455' }}>Kaushik</span>
+                    <span className="font-normal text-zinc-700"> ✨</span>
+                  </h1>
+                </div>
+
+                <div className={`text-zinc-700 ${dmSans.className} mb-8`} style={{ fontSize: '17px', lineHeight: '1.7' }}>
+                  <p className="mb-4">
+                    A designer based out of Chennai, a city known for its culture, coffee, and endless sunshine. Like many Indian kids, I studied engineering, but somewhere along the way, I found myself drawn to design.
 
                   </p>
-                  <p>
-                    Outside of work, I enjoy listening to music or watching movies. Photography is one of my biggest passions, and yes, I often stop at random places to take a picture just because the light looks perfect. I also love learning new things and exploring topics around history, travel, food, and sports. The two teams I follow are Chennai Super Kings (CSK) and Arsenal. Let’s connect — always up for a good chat! 😊
+                  <p className="mb-4">
+
+                    It all started with me making random posters in Photoshop and Illustrator just for fun. What began as a simple hobby slowly led me into the Product Design, and before I knew it, it became my full-time career 😅. I’ve spent the past few years creating experiences that felt simple, thoughtful, and human.
+
+
+
                   </p>
+                  <p className="mb-4">
+
+
+
+                    Beyond work, I’m deeply into photography, and I often stop at random places just to capture the light at the right moment. I also love exploring history, learning about different cultures, and finding stories hidden in food, music, and travel. Outside of all that, I’m usually watching movies or listening to music.
+
+
+
+                  </p>
+                  <p className="mb-4">
+
+
+
+                    I’m also a big sports fan, CSK 💛 and Arsenal ❤️ keep me excited, hopeful, and occasionally heartbroken through the seasons.
+
+
+
+                  </p>
+                  <p className="mb-4">
+
+
+
+                    I’m always curious about people and their stories. Up for a good conversation and happy to connect with like-minded folks 😇
+
+                  </p>
+
+
                 </div>
 
                 {/* Social Links */}
-                <div style={{ marginTop: '20px' }}>
-                  <h3 className={`font-medium tracking-wide ${geistMono.className} text-sm text-gray-500`} style={{ marginBottom: '6px' }}>
+                <div className="mb-4">
+                  <h3 className={`font-medium tracking-wide ${geistMono.className} text-sm mb-3`} style={{ color: '#9CA3AF' }}>
                     Social Links
                   </h3>
-                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-0">
-                    {SOCIAL_LINKS.filter(link => link.label === 'Instagram' || link.label === 'X.com').map((link, index, filteredArray) => (
-                      <span key={link.label} className="flex items-center">
+                  <div className="flex items-center gap-2">
+                    {SOCIAL_LINKS.filter(link => link.label === 'Instagram' || link.label === 'X.com').map((link, index) => (
+                      <div key={link.label} className="flex items-center gap-2">
                         <a
                           href={link.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className={`${dmSans.className} text-zinc-600 hover:text-[#0A7455] transition-colors duration-200 flex items-center gap-1 text-sm`}
+                          className={`${dmSans.className} text-zinc-600 hover:text-[#0A7455] hover:font-medium transition-all duration-200 flex items-center gap-2 text-sm`}
                         >
                           {link.label}
                           <svg
@@ -334,18 +509,16 @@ export default function Personal() {
                             />
                           </svg>
                         </a>
-                        {index < filteredArray.length - 1 && (
-                          <span className="mx-3 text-zinc-400 hidden sm:inline">•</span>
-                        )}
-                      </span>
+                        {index === 0 && <span className="text-zinc-400 text-sm">•</span>}
+                      </div>
                     ))}
                   </div>
                 </div>
+              </div>
 
-                {/* Footer Note */}
-                <div className={`text-center mt-6 text-xs text-gray-400 tracking-wide ${dmSans.className}`}>
-                  Designed by Human 🧠 - Co-built with Claude 🤖 - Powered by Caffeine ☕️
-                </div>
+              {/* Footer Note */}
+              <div className={`text-xs text-gray-400 tracking-wide ${dmSans.className} text-center`}>
+                Designed by Human 🧠 - Co-built with Claude 🤖 - Powered by Caffeine ☕️
               </div>
             </motion.div>
           </div>
@@ -396,7 +569,7 @@ export default function Personal() {
                   </label>
                 </div>
                 <span className={`text-xs sm:text-sm lg:text-sm ${dmSans.className}`}>
-                  <span className="text-zinc-900">Behind pixels.</span>{' '}
+                  <span className="text-zinc-900 font-bold">Behind pixels.</span>{' '}
                   <span className="text-zinc-600 hidden sm:inline">A little about me, off the grid</span>
                   {/* Dark mode: text-zinc-100, text-zinc-400 */}
                 </span>
@@ -609,7 +782,7 @@ export default function Personal() {
                   <button
                     onClick={() => setActiveTab('case-studies')}
                     className={`pb-2 px-1 ${activeTab === 'case-studies' ? 'font-semibold' : 'font-medium'} tracking-wide ${geistMono.className} text-sm border-b-2 border-transparent transition-colors relative cursor-pointer ${activeTab !== 'case-studies' ? 'hover:text-gray-700 group' : ''}`}
-                    style={{ color: activeTab === 'case-studies' ? '#0A7455' : '#6B7350' }}
+                    style={{ color: activeTab === 'case-studies' ? '#0A7455' : '#6B7280' }}
                   >
                     Selected Works
                     {activeTab === 'case-studies' && (
@@ -636,7 +809,7 @@ export default function Personal() {
                   <button
                     onClick={() => setActiveTab('visual-snippets')}
                     className={`pb-2 px-1 ${activeTab === 'visual-snippets' ? 'font-semibold' : 'font-medium'} tracking-wide ${geistMono.className} text-sm border-b-2 border-transparent transition-colors relative cursor-pointer ${activeTab !== 'visual-snippets' ? 'hover:text-gray-700 group' : ''}`}
-                    style={{ color: activeTab === 'visual-snippets' ? '#0A7455' : '#6B7350' }}
+                    style={{ color: activeTab === 'visual-snippets' ? '#0A7455' : '#6B7280' }}
                   >
                     Visual Snippets
                     {activeTab === 'visual-snippets' && (
@@ -711,13 +884,38 @@ export default function Personal() {
                                     href={project.caseStudyLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className={`transition-colors duration-200 hover:underline ${dmSans.className}`}
+                                    className={`transition-colors duration-200 hover:underline ${dmSans.className} inline-block`}
                                     style={{ color: '#0A7455', fontSize: '16px' }}
+                                    onMouseEnter={(e) => {
+                                      if (index < 3) { // Only show tooltip for first 3 cards
+                                        setCaseStudyTooltip({ show: true, x: e.clientX, y: e.clientY })
+                                      }
+                                    }}
+                                    onMouseLeave={() => setCaseStudyTooltip({ show: false, x: 0, y: 0 })}
+                                    onMouseMove={(e) => {
+                                      if (index < 3) {
+                                        setCaseStudyTooltip({ show: true, x: e.clientX, y: e.clientY })
+                                      }
+                                    }}
                                   >
                                     View Case Study
                                   </a>
                                 ) : (
-                                  <span className={`text-gray-400 ${dmSans.className} flex items-center gap-1`} style={{ fontSize: '16px' }}>
+                                  <span
+                                    className={`text-gray-400 ${dmSans.className} inline-flex items-center gap-1`}
+                                    style={{ fontSize: '16px' }}
+                                    onMouseEnter={(e) => {
+                                      if (index < 3) { // Only show tooltip for first 3 cards
+                                        setCaseStudyTooltip({ show: true, x: e.clientX, y: e.clientY })
+                                      }
+                                    }}
+                                    onMouseLeave={() => setCaseStudyTooltip({ show: false, x: 0, y: 0 })}
+                                    onMouseMove={(e) => {
+                                      if (index < 3) {
+                                        setCaseStudyTooltip({ show: true, x: e.clientX, y: e.clientY })
+                                      }
+                                    }}
+                                  >
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                       <path d="M6 10V8C6 5.79086 7.79086 4 10 4H14C16.2091 4 18 5.79086 18 8V10M5 10H19C19.5523 10 20 10.4477 20 11V19C20 19.5523 19.5523 20 19 20H5C4.44772 20 4 19.5523 4 19V11C4 10.4477 4.44772 10 5 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
@@ -814,6 +1012,20 @@ export default function Personal() {
           }}
         >
           Click to enlarge
+        </div>
+      )}
+
+      {/* Case Study Tooltip */}
+      {caseStudyTooltip.show && (
+        <div
+          className="fixed z-40 pointer-events-none text-white text-xs px-3 py-2 rounded-full"
+          style={{
+            backgroundColor: '#0A7455',
+            left: caseStudyTooltip.x - 50,
+            top: caseStudyTooltip.y + 20,
+          }}
+        >
+          Let's Connect
         </div>
       )}
 
