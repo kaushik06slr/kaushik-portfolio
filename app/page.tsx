@@ -133,13 +133,10 @@ export default function Personal() {
     }
   }, [isLoading])
 
-  // Prevent body scroll when in personal mode
+  // Allow natural scrolling in personal mode
   useEffect(() => {
-    if (isPersonalMode) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'unset'
-    }
+    // Always allow natural scrolling in personal mode
+    document.body.style.overflow = 'unset'
 
     // Cleanup on unmount
     return () => {
@@ -155,7 +152,7 @@ export default function Personal() {
       {isPersonalMode ? (
         // Personal Mode - Bio and Postcards Layout
         <motion.main
-          className="min-h-screen flex flex-col lg:flex-row overflow-hidden"
+          className="min-h-screen flex flex-col md:flex-row"
           style={{ backgroundColor: '#FAFCFC' }}
           variants={VARIANTS_CONTAINER}
           initial="hidden"
@@ -194,17 +191,17 @@ export default function Personal() {
             </div>
           </div>
 
-          {/* Left Section - 60% - Carousel */}
-          <div className="w-full lg:w-[60%] min-h-screen flex flex-col px-4 py-4 lg:px-8 lg:py-8 overflow-hidden" style={{ paddingTop: '80px' }}>
+          {/* Carousel Section */}
+          <div className="w-full md:w-[60%] md:min-h-screen flex flex-col px-4 py-4 lg:px-8 lg:py-8" style={{ paddingTop: '80px' }}>
             <motion.div
               variants={VARIANTS_SECTION}
               transition={TRANSITION_SECTION}
               className="w-full"
             >
-              {/* Three Column Vertical Carousel */}
-              <div className="flex justify-between gap-6 lg:gap-8 w-full">
+              {/* Responsive Vertical Carousel */}
+              <div className="flex justify-between gap-4 md:gap-6 lg:gap-8 w-full">
                 {/* Column 1 - 5 photos - Moving Down */}
-                <div className="relative h-screen overflow-hidden flex-1">
+                <div className="relative h-[350px] md:h-screen overflow-hidden flex-1">
                   <div className="flex flex-col gap-4 lg:gap-6 animate-marquee-vertical-down">
                     {[
                       "Thailand 🇹🇭.jpeg",
@@ -278,7 +275,7 @@ export default function Personal() {
                 </div>
 
                 {/* Column 2 - 4 photos - Moving Up */}
-                <div className="relative h-screen overflow-hidden flex-1" style={{ marginTop: '40px' }}>
+                <div className="relative h-[350px] md:h-screen overflow-hidden flex-1 hidden md:block" style={{ marginTop: '40px' }}>
                   <div className="flex flex-col gap-4 lg:gap-6 animate-marquee-vertical-up">
                     {[
                       "🤘🎸.jpeg",
@@ -348,7 +345,7 @@ export default function Personal() {
                 </div>
 
                 {/* Column 3 - 4 photos - Moving Down */}
-                <div className="relative h-screen overflow-hidden flex-1">
+                <div className="relative h-[350px] md:h-screen overflow-hidden flex-1 hidden lg:block">
                   <div className="flex flex-col gap-4 lg:gap-6 animate-marquee-vertical-down">
                     {[
                       "✨.jpeg",
@@ -420,12 +417,12 @@ export default function Personal() {
             </motion.div>
           </div>
 
-          {/* Right Section - 40% - Bio Content */}
-          <div className="w-full lg:w-[40%] h-screen flex flex-col px-6 py-8 lg:px-8 lg:py-12 overflow-hidden" style={{ paddingTop: '80px' }}>
+          {/* Bio Content Section */}
+          <div className="w-full md:w-[40%] md:h-screen flex flex-col px-6 py-8 lg:px-8 lg:py-12 mt-8 md:mt-0" style={{ paddingTop: '80px' }}>
             <motion.div
               variants={VARIANTS_SECTION}
               transition={TRANSITION_SECTION}
-              className="flex flex-col justify-between h-full max-w-lg"
+              className="flex flex-col max-w-lg mx-auto md:mx-0 md:justify-between md:h-full"
             >
               <div>
                 {/* Title */}
@@ -570,7 +567,7 @@ export default function Personal() {
                 </div>
                 <span className={`text-xs sm:text-sm lg:text-sm ${dmSans.className}`}>
                   <span className="text-zinc-900 font-bold">Behind pixels.</span>{' '}
-                  <span className="text-zinc-600 hidden sm:inline">A little about me, off the grid</span>
+                  <span className="text-zinc-600">A little about me, off the grid</span>
                   {/* Dark mode: text-zinc-100, text-zinc-400 */}
                 </span>
               </div>
@@ -591,7 +588,7 @@ export default function Personal() {
               {!isPersonalMode && (
                 <div className="flex justify-center">
                   <div className="relative">
-                    <div className="rounded-full overflow-hidden bg-black w-32 h-32 sm:w-40 sm:h-40 lg:w-[170px] lg:h-[170px]">
+                    <div className="rounded-full overflow-hidden mt-4 mb-2 bg-black w-32 h-32 sm:w-40 sm:h-40 lg:w-[170px] lg:h-[170px]">
                       <Image
                         src="/Professional.png"
                         alt="Kaushik R"
