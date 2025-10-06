@@ -6,7 +6,7 @@
 
 A modern, interactive portfolio website showcasing my 6+ years of experience in Product (UX) Design, built with Next.js 15, React 19, Tailwind CSS, and Motion.
 
-🌐 **Live Website:** [kaushikr.vercel.app](https://kaushikr.vercel.app) *(Update with your actual URL)*
+🌐 **Live Website:** [kaushikr.vercel.app](https://kaushikr.com) *(Update with your actual URL)*
 
 ## 👋 About Me
 
