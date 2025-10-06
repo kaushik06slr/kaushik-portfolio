@@ -341,7 +341,7 @@ export default function Personal() {
 
                 {/* Footer Note */}
                 <div className={`text-center mt-6 text-xs text-gray-400 tracking-wide ${archivo.className}`}>
-                  Designed by Human 🧠, Co-built with Claude 🤖, Powered by Caffeine ☕️
+                  Designed by Human 🧠 - Co-built with Claude 🤖 - Powered by Caffeine ☕️
                 </div>
               </div>
             </motion.div>
