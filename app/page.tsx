@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import Image from 'next/image';
 
-import { Archivo } from 'next/font/google';
 import { Geist_Mono } from 'next/font/google';
 
 import localFont from 'next/font/local';
@@ -14,8 +13,12 @@ import {
   VISUAL_SNIPPETS,
 } from './data'
 
-const archivo = Archivo({ subsets: ['latin'] });
 const geistMono = Geist_Mono({ subsets: ['latin'] });
+
+const dmSans = localFont({
+  src: './fonts/DM_Sans/DMSans-VariableFont_opsz,wght.ttf',
+  display: 'swap',
+});
 
 const beautyDemo = localFont({
   src: './fonts/BeautyDemo.otf',
@@ -169,7 +172,7 @@ export default function Personal() {
                   </div>
                 </label>
               </div>
-              <span className={`text-xs lg:text-sm ${archivo.className}`}>
+              <span className={`text-xs lg:text-sm ${dmSans.className}`}>
                 <span className="text-zinc-900">Behind pixels.</span>{' '}
                 <span className="text-zinc-600">A little about me, off the grid</span>
               </span>
@@ -290,7 +293,7 @@ export default function Personal() {
               style={{ paddingTop: '0px' }}
             >
               <div className="max-w-7xl mx-auto text-center" style={{ paddingTop: '24px' }}>
-                <div className={`text-zinc-500 tracking-normal ${archivo.className} px-2 sm:px-4`} style={{ fontSize: 'clamp(14px, 2.5vw, 18px)', lineHeight: '1.6', textAlign: 'center' }}>
+                <div className={`text-zinc-700 ${dmSans.className} px-2 sm:px-4`} style={{ fontSize: 'clamp(14px, 2.5vw, 18px)', lineHeight: '1.6', textAlign: 'center' }}>
                   <p className="mb-3">
                     Hello again 👋 I’m Kaushik! I’m based out of Chennai, Tamil Nadu. Like many Indian kids, I studied engineering — but somewhere along the way, I stumbled into design. It started with me making random posters in Photoshop and Illustrator, and before I knew it, that little hobby led me into Product (aka UX) Design. And well… that’s now my full-blown career 😅.
 
@@ -302,7 +305,7 @@ export default function Personal() {
 
                 {/* Social Links */}
                 <div style={{ marginTop: '20px' }}>
-                  <h3 className={`font-medium tracking-wide ${geistMono.className} text-sm`} style={{ color: '#6B7350', marginBottom: '6px' }}>
+                  <h3 className={`font-medium tracking-wide ${geistMono.className} text-sm text-gray-500`} style={{ marginBottom: '6px' }}>
                     Social Links
                   </h3>
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-0">
@@ -312,7 +315,7 @@ export default function Personal() {
                           href={link.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className={`${archivo.className} text-zinc-600 hover:text-[#0A7455] transition-colors duration-200 flex items-center gap-1 text-sm`}
+                          className={`${dmSans.className} text-zinc-600 hover:text-[#0A7455] transition-colors duration-200 flex items-center gap-1 text-sm`}
                         >
                           {link.label}
                           <svg
@@ -340,7 +343,7 @@ export default function Personal() {
                 </div>
 
                 {/* Footer Note */}
-                <div className={`text-center mt-6 text-xs text-gray-400 tracking-wide ${archivo.className}`}>
+                <div className={`text-center mt-6 text-xs text-gray-400 tracking-wide ${dmSans.className}`}>
                   Designed by Human 🧠 - Co-built with Claude 🤖 - Powered by Caffeine ☕️
                 </div>
               </div>
@@ -392,7 +395,7 @@ export default function Personal() {
                     </div>
                   </label>
                 </div>
-                <span className={`text-xs sm:text-sm lg:text-sm ${archivo.className}`}>
+                <span className={`text-xs sm:text-sm lg:text-sm ${dmSans.className}`}>
                   <span className="text-zinc-900">Behind pixels.</span>{' '}
                   <span className="text-zinc-600 hidden sm:inline">A little about me, off the grid</span>
                   {/* Dark mode: text-zinc-100, text-zinc-400 */}
@@ -450,7 +453,7 @@ export default function Personal() {
               )}
 
               {/* Bio Text */}
-              <div className={`text-zinc-700 tracking-normal ${archivo.className} px-2 sm:px-4 lg:px-0`} style={{ fontSize: isPersonalMode ? 'clamp(16px, 3.5vw, 22px)' : 'clamp(13px, 2.2vw, 16px)', lineHeight: '1.6', marginTop: isPersonalMode ? '32px' : '8px', textAlign: 'center' }}>
+              <div className={`text-zinc-700 tracking-normal ${dmSans.className} px-2 sm:px-4 lg:px-0`} style={{ fontSize: isPersonalMode ? 'clamp(16px, 3.5vw, 22px)' : 'clamp(13px, 2.2vw, 16px)', lineHeight: '1.6', marginTop: isPersonalMode ? '32px' : '8px', textAlign: 'center' }}>
                 {/* Dark mode: color: '#F3F4F6' instead of text-zinc-700 */}
                 {!isPersonalMode && (
                   <>
@@ -467,7 +470,7 @@ export default function Personal() {
               {/* Compact Experience Section */}
               {!isPersonalMode && (
                 <div style={{ marginTop: '20px' }} className="sm:mt-7">
-                  <h3 className={`font-medium tracking-wide ${geistMono.className} text-xs sm:text-sm sm:mb-6`} style={{ color: '#6B7350', marginBottom: '16px' }}>
+                  <h3 className={`font-medium tracking-wide ${geistMono.className} text-xs sm:text-sm sm:mb-6 text-gray-500`} style={{ marginBottom: '16px' }}>
                     Career Journey
                   </h3>
                   <div className="flex items-center justify-center overflow-x-auto px-2">
@@ -560,7 +563,7 @@ export default function Personal() {
                         href={link.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`${archivo.className} text-zinc-600 hover:text-[#0A7455] transition-colors duration-200 flex items-center gap-1 text-sm`}
+                        className={`${dmSans.className} text-zinc-600 hover:text-[#0A7455] transition-colors duration-200 flex items-center gap-1 text-sm`}
                       // Dark mode: text-zinc-400
                       >
                         {link.label}
@@ -687,17 +690,17 @@ export default function Personal() {
                             <div className="p-6 flex flex-col flex-grow">
 
                               {/* Company | Shipped | Year */}
-                              <p className={`text-gray-500 ${archivo.className}`} style={{ fontSize: '14px', marginBottom: '4px' }}>
+                              <p className={`text-gray-500 ${dmSans.className}`} style={{ fontSize: '14px', marginBottom: '4px' }}>
                                 {project.company} &nbsp;•&nbsp; {project.status} &nbsp;•&nbsp; {project.year}
                               </p>
 
                               {/* Title */}
-                              <h3 className={`font-bold text-black ${archivo.className}`} style={{ fontSize: '20px', marginBottom: '16px' }}>
+                              <h3 className={`font-bold text-black ${dmSans.className}`} style={{ fontSize: '20px', marginBottom: '16px' }}>
                                 {project.name}
                               </h3>
 
                               {/* Description */}
-                              <p className={`text-gray-600 ${archivo.className} flex-grow`} style={{ fontSize: '16px', lineHeight: '1.5', marginBottom: '16px' }}>
+                              <p className={`text-gray-600 ${dmSans.className} flex-grow`} style={{ fontSize: '16px', lineHeight: '1.5', marginBottom: '16px' }}>
                                 {project.description}
                               </p>
 
@@ -708,13 +711,13 @@ export default function Personal() {
                                     href={project.caseStudyLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className={`transition-colors duration-200 hover:underline ${archivo.className}`}
+                                    className={`transition-colors duration-200 hover:underline ${dmSans.className}`}
                                     style={{ color: '#0A7455', fontSize: '16px' }}
                                   >
                                     View Case Study
                                   </a>
                                 ) : (
-                                  <span className={`text-gray-400 ${archivo.className} flex items-center gap-1`} style={{ fontSize: '16px' }}>
+                                  <span className={`text-gray-400 ${dmSans.className} flex items-center gap-1`} style={{ fontSize: '16px' }}>
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                       <path d="M6 10V8C6 5.79086 7.79086 4 10 4H14C16.2091 4 18 5.79086 18 8V10M5 10H19C19.5523 10 20 10.4477 20 11V19C20 19.5523 19.5523 20 19 20H5C4.44772 20 4 19.5523 4 19V11C4 10.4477 4.44772 10 5 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
@@ -723,12 +726,12 @@ export default function Personal() {
                                 )}
                                 {project.id !== 'project4' && (
                                   <>
-                                    <span className={`mx-2 text-gray-400 ${archivo.className}`} style={{ fontSize: '16px' }}>•</span>
+                                    <span className={`mx-2 text-gray-400 ${dmSans.className}`} style={{ fontSize: '16px' }}>•</span>
                                     <a
                                       href={project.link}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className={`transition-colors duration-200 hover:underline ${archivo.className}`}
+                                      className={`transition-colors duration-200 hover:underline ${dmSans.className}`}
                                       style={{ color: '#0A7455', fontSize: '16px' }}
                                     >
                                       Documentation
@@ -737,12 +740,12 @@ export default function Personal() {
                                 )}
                                 {project.video && (
                                   <>
-                                    <span className={`mx-2 text-gray-400 ${archivo.className}`} style={{ fontSize: '16px' }}>•</span>
+                                    <span className={`mx-2 text-gray-400 ${dmSans.className}`} style={{ fontSize: '16px' }}>•</span>
                                     <a
                                       href={project.video}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className={`transition-colors duration-200 hover:underline ${archivo.className}`}
+                                      className={`transition-colors duration-200 hover:underline ${dmSans.className}`}
                                       style={{ color: '#0A7455', fontSize: '16px' }}
                                     >
                                       Demo
@@ -761,7 +764,7 @@ export default function Personal() {
 
                   {activeTab === 'visual-snippets' && (
                     <div className="relative">
-                      <div className={`text-center mb-8 -mt-2 text-gray-400 ${archivo.className}`} style={{ fontSize: '14px' }}>
+                      <div className={`text-center mb-8 -mt-2 text-gray-400 ${dmSans.className}`} style={{ fontSize: '14px' }}>
                         A few visual highlights from my design work
                       </div>
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
@@ -941,7 +944,7 @@ export default function Personal() {
 
               {/* Loading Text */}
               <motion.div
-                className={`text-center ${archivo.className}`}
+                className={`text-center ${dmSans.className}`}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
