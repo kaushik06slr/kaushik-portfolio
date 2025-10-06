@@ -37,8 +37,8 @@ type VisualSnippet = {
 
 export const PROJECTS: Project[] = [
   {
-    name: 'Document Management with Appian Records',
-    description: 'Enable seamless organization of documents as record types, supporting intuitive data relationships, enhanced security, and workflow integration.',
+    name: 'Unified Document Management with Appian Records',
+    description: 'Seamlessly organize and manage documents as record types, enabling richer data relationships, stronger security, and integrated workflows across Appian applications',
     video: 'https://www.youtube.com/watch?v=pdkH77lRoYE',
     image: '/Record Documents.png',
     link: 'https://docs.appian.com/suite/help/25.3/manage-docs-with-records.html',
@@ -48,8 +48,8 @@ export const PROJECTS: Project[] = [
     status: 'Shipped',
   },
   {
-    name: 'Bridging Data Streams: Native Kafka Integration for Appian',
-    description: 'Native Appian feature for integration with Apache Kafka, a powerful real-time data streaming platform',
+    name: 'Real-Time Data Streaming with Appian Kafka Integration',
+    description: 'Connect Appian natively with Apache Kafka to harness real-time data streams, drive event-based automation, and enhance system responsiveness',
     video: '',
     image: '/kafka.png',
     link: 'https://community.appian.com/betas/b/programs/posts/kafka-integration',
@@ -59,8 +59,8 @@ export const PROJECTS: Project[] = [
     status: 'Beta',
   },
   {
-    name: 'Records Collaboration in Appian',
-    description: 'Enable adding top-level comments on record events for seamless collaboration and updates.',
+    name: 'Seamless Record-Level Collaboration with Appian',
+    description: 'Enable teams to add top-level comments on record events, facilitating seamless collaboration, real-time updates, and centralized, context-rich communication',
     video: '',
     image: '/Records Collaboration.png',
     link: 'https://docs.appian.com/suite/help/25.3/record-events-collaboration.html#top-level-comments',
@@ -70,7 +70,7 @@ export const PROJECTS: Project[] = [
     status: 'Shipped',
   },
   {
-    name: 'FIGARO - Loan post closing platform',
+    name: 'FIGARO: Centralized Loan Post-Closing Platform',
     description: 'A centralized post-closing audit system designed to streamline loan validation, automate audits, and improve efficiency for loan processors and managers',
     video: '',
     image: '/Figaro.png',
