@@ -1,5 +1,7 @@
 # Kaushik's Portfolio
 
+![Portfolio Preview](public/1.jpg)
+
 > **Senior Product Designer** turning **Complexity → Clarity** through user-focused, scalable digital experiences.
 
 A modern, interactive portfolio website showcasing my 6+ years of experience in Product (UX) Design, built with Next.js 15, React 19, Tailwind CSS, and Motion.
@@ -9,12 +11,6 @@ A modern, interactive portfolio website showcasing my 6+ years of experience in 
 ## 👋 About Me
 
 I'm Kaushik, a Senior Product Designer from Chennai, India, specializing in designing human-centered digital experiences across low-code/no-code platforms and fintech. Currently at **Appian Corporation**, I work on enhancing data management experiences within the Data Fabric, helping organizations unify, manage, and leverage their data effectively.
-
-### 🎯 What I Do
-- **Product Design** - End-to-end user experience design
-- **Systems Thinking** - Creating scalable, intuitive solutions  
-- **Cross-functional Collaboration** - Working with engineering, product, and business teams
-- **Data Management UX** - Specializing in complex data workflows and interfaces
 
 ## 🏃‍♂️ Getting Started
 
