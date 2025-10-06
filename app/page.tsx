@@ -97,11 +97,22 @@ export default function Personal() {
   }, [enlargedImage])
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 3000) // 3 seconds loading screen
+    // Check if user has already seen loading screen in this session
+    const hasSeenLoading = sessionStorage.getItem('hasSeenLoading')
 
-    return () => clearTimeout(timer)
+    if (hasSeenLoading) {
+      // Skip loading screen if already seen in this session
+      setIsLoading(false)
+    } else {
+      // Show loading screen for first visit in session
+      const timer = setTimeout(() => {
+        setIsLoading(false)
+        // Mark that user has seen loading screen in this session
+        sessionStorage.setItem('hasSeenLoading', 'true')
+      }, 3000) // 3 seconds loading screen
+
+      return () => clearTimeout(timer)
+    }
   }, [])
 
   // Prevent body scroll when loading screen is active
@@ -126,14 +137,14 @@ export default function Personal() {
       {isPersonalMode ? (
         // Personal Mode - Bio and Postcards Layout
         <motion.main
-          className="min-h-screen relative px-2 py-4 lg:px-8 lg:py-6"
+          className="min-h-screen relative px-2 py-4 sm:px-4 sm:py-6 lg:px-8 lg:py-6"
           style={{ backgroundColor: '#FAFCFC' }}
           variants={VARIANTS_CONTAINER}
           initial="hidden"
           animate="visible"
         >
           {/* Personal Mode Toggle */}
-          <div className="absolute top-6 left-6 lg:left-24 z-10">
+          <div className="absolute top-4 left-4 sm:top-6 sm:left-6 lg:left-24 z-10">
             <div className="flex items-center space-x-3">
               <div className="relative">
                 <input
@@ -171,11 +182,11 @@ export default function Personal() {
             <motion.div
               variants={VARIANTS_SECTION}
               transition={TRANSITION_SECTION}
-              className="bg-#FAFCFC pt-12 px-8"
+              className="bg-#FAFCFC pt-8 px-4 sm:pt-12 sm:px-8"
               style={{ paddingBottom: '32px' }}
             >
               <div className="max-w-4xl mx-auto text-center">
-                <h1 className={`text-6xl lg:text-6xl ${beautyDemo.className} mb-1`} style={{ color: '#0A7455' }}>
+                <h1 className={`text-4xl sm:text-5xl lg:text-6xl ${beautyDemo.className} mb-1`} style={{ color: '#0A7455' }}>
                   Life in postcards ✨
                 </h1>
               </div>
@@ -185,7 +196,7 @@ export default function Personal() {
             <motion.div
               variants={VARIANTS_SECTION}
               transition={TRANSITION_SECTION}
-              className="flex items-center px-8"
+              className="flex items-center px-4 sm:px-8"
               style={{ paddingTop: '0px', paddingBottom: '26px' }}
             >
               {/* Marquee container */}
@@ -193,19 +204,17 @@ export default function Personal() {
                 <div className="flex space-x-6 animate-marquee" style={{ width: 'max-content' }}>
                   {/* First set of images */}
                   {[
-                    "Thailand.jpeg",
+                    "Thailand 🇹🇭.jpeg",
                     "☕️.jpeg",
-                    "Golden Gate Bridge.jpeg",
-                    "It's me again!.jpeg",
-                    "🍦.jpeg",
-                    "🌆.jpeg",
+                    "Golden Gate Bridge 🌁.jpeg",
+                    "It's me again! 🙋🏻‍♂️.jpeg",
                     "Mysore.jpeg",
                     "🤘🎸.jpeg",
                     "Carmel by the Sea.jpeg",
                     "🍿🎬.jpeg",
-                    "New York.jpeg",
+                    "New York 🇺🇸.jpeg",
                     "✨.jpeg",
-                    "Appian HQ, Virginia.jpeg",
+                    "Appian HQ 💼.jpeg",
                     "Chennai ❤️.jpeg"
                   ].map((image) => (
                     <div
@@ -233,19 +242,17 @@ export default function Personal() {
                   ))}
                   {/* Duplicate set for seamless loop */}
                   {[
-                    "Thailand.jpeg",
+                    "Thailand 🇹🇭.jpeg",
                     "☕️.jpeg",
-                    "Golden Gate Bridge.jpeg",
-                    "It's me again!.jpeg",
-                    "🍦.jpeg",
-                    "🌆.jpeg",
+                    "Golden Gate Bridge 🌁.jpeg",
+                    "It's me again! 🙋🏻‍♂️.jpeg",
                     "Mysore.jpeg",
                     "🤘🎸.jpeg",
                     "Carmel by the Sea.jpeg",
                     "🍿🎬.jpeg",
-                    "New York.jpeg",
+                    "New York 🇺🇸.jpeg",
                     "✨.jpeg",
-                    "Appian HQ, Virginia.jpeg",
+                    "Appian HQ 💼.jpeg",
                     "Chennai ❤️.jpeg"
                   ].map((image) => (
                     <div
@@ -279,17 +286,17 @@ export default function Personal() {
             <motion.div
               variants={VARIANTS_SECTION}
               transition={TRANSITION_SECTION}
-              className="bg-#FAFCFC pb-12 px-8"
+              className="bg-#FAFCFC pb-8 px-4 sm:pb-12 sm:px-8"
               style={{ paddingTop: '0px' }}
             >
               <div className="max-w-7xl mx-auto text-center" style={{ paddingTop: '24px' }}>
-                <div className={`text-zinc-500 tracking-normal ${archivo.className}`} style={{ fontSize: 'clamp(16px, 2.5vw, 18px)', lineHeight: '1.6', textAlign: 'center' }}>
+                <div className={`text-zinc-500 tracking-normal ${archivo.className} px-2 sm:px-4`} style={{ fontSize: 'clamp(14px, 2.5vw, 18px)', lineHeight: '1.6', textAlign: 'center' }}>
                   <p className="mb-3">
-                    Hello again 👋 I’m Kaushik! I was born in Chennai and spent my early years in different parts of India before coming back here, where I’ve been for the past few years.. Like many Indian kids, I studied engineering… but somewhere during that time, I stumbled into design. It started with me making random posters in Photoshop and Illustrator, and before I knew it, that little hobby led me in to Product (aka UX) design… and well, that’s now my full-blown career 😅.
+                    Hello again 👋 I’m Kaushik! I’m based out of Chennai, Tamil Nadu. Like many Indian kids, I studied engineering — but somewhere along the way, I stumbled into design. It started with me making random posters in Photoshop and Illustrator, and before I knew it, that little hobby led me into Product (aka UX) Design. And well… that’s now my full-blown career 😅.
 
                   </p>
                   <p>
-                    When I’m not designing, I’m usually listening to music or watching a movie. Photography is one of my biggest passions, and yes, I often stop at random places just because the light looks perfect 😅. I also love learning new things and exploring topics around History, Travel, Food, and Sports. The two teams I follow religiously are Chennai Super Kings (CSK) and Arsenal. Let's connect, Always up for a good chat! 😊
+                    Outside of work, I enjoy listening to music or watching movies. Photography is one of my biggest passions, and yes, I often stop at random places to take a picture just because the light looks perfect. I also love learning new things and exploring topics around history, travel, food, and sports. The two teams I follow are Chennai Super Kings (CSK) and Arsenal. Let’s connect — always up for a good chat! 😊
                   </p>
                 </div>
 
@@ -334,7 +341,7 @@ export default function Personal() {
 
                 {/* Footer Note */}
                 <div className={`text-center mt-6 text-xs text-gray-400 tracking-wide ${archivo.className}`}>
-                  Designed with love ❤️, Co-built with Claude 🤖
+                  Designed by Human 🧠, Co-built with Claude 🤖, Powered by Caffeine ☕️
                 </div>
               </div>
             </motion.div>
@@ -343,22 +350,22 @@ export default function Personal() {
       ) : (
         // Professional Mode - Two Column Layout
         <motion.main
-          className="min-h-screen flex flex-col lg:flex-row lg:h-screen overflow-hidden"
+          className="min-h-screen flex flex-col xl:flex-row xl:h-screen"
           variants={VARIANTS_CONTAINER}
           initial="hidden"
           animate="visible"
         >
           {/* Left Column - Existing Content */}
           <div
-            className="w-full lg:w-[45%] flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#DFF5EE] relative px-6 py-8 lg:px-24 lg:py-12 min-h-screen"
+            className="w-full xl:w-[45%] flex flex-col justify-between border-b xl:border-b-0 xl:border-r border-[#DFF5EE] relative px-4 py-6 sm:px-6 sm:py-8 lg:px-12 lg:py-10 xl:px-24 xl:py-12 min-h-screen xl:max-h-screen xl:overflow-y-auto"
             style={{
               backgroundColor: '#FAFCFC'
               // Dark mode: backgroundColor: '#0F0F0F', border: 'border-zinc-800'
             }}
           >
             {/* Personal Mode Toggle */}
-            <div className="absolute top-6 left-6 lg:left-24">
-              <div className="flex items-center space-x-3">
+            <div className="absolute top-4 left-4 sm:top-6 sm:left-6 lg:left-12 xl:left-24 z-10">
+              <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className="relative">
                   <input
                     type="checkbox"
@@ -369,12 +376,12 @@ export default function Personal() {
                   />
                   <label
                     htmlFor="personalMode"
-                    className={`relative block w-10 h-6 rounded-full cursor-pointer transition-colors duration-200 ${isPersonalMode ? 'bg-[#0A7455]' : 'bg-zinc-300 hover:bg-zinc-400'
+                    className={`relative block w-8 h-5 sm:w-10 sm:h-6 rounded-full cursor-pointer transition-colors duration-200 ${isPersonalMode ? 'bg-[#0A7455]' : 'bg-zinc-300 hover:bg-zinc-400'
                       // Dark mode: 'bg-zinc-700 hover:bg-zinc-600'
                       }`}
                   >
                     <div
-                      className="absolute w-4 h-4 bg-white rounded-full shadow-sm transition-all duration-200 flex items-center justify-center pointer-events-none"
+                      className="absolute w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full shadow-sm transition-all duration-200 flex items-center justify-center pointer-events-none"
                       style={{
                         top: isPersonalMode ? '0px' : '4px',
                         left: isPersonalMode ? '4px' : '4px'
@@ -385,16 +392,16 @@ export default function Personal() {
                     </div>
                   </label>
                 </div>
-                <span className={`text-xs lg:text-sm ${archivo.className}`}>
+                <span className={`text-xs sm:text-sm lg:text-sm ${archivo.className}`}>
                   <span className="text-zinc-900">Behind pixels.</span>{' '}
-                  <span className="text-zinc-600">A little about me, off the grid</span>
+                  <span className="text-zinc-600 hidden sm:inline">A little about me, off the grid</span>
                   {/* Dark mode: text-zinc-100, text-zinc-400 */}
                 </span>
               </div>
             </div>
 
             {/* Spacer for toggle */}
-            <div style={{ marginTop: '26px' }}></div>
+            <div style={{ marginTop: '20px' }} className="sm:mt-6"></div>
 
 
 
@@ -408,7 +415,7 @@ export default function Personal() {
               {!isPersonalMode && (
                 <div className="flex justify-center">
                   <div className="relative">
-                    <div className="rounded-full overflow-hidden bg-black" style={{ width: '170px', height: '170px' }}>
+                    <div className="rounded-full overflow-hidden bg-black w-32 h-32 sm:w-40 sm:h-40 lg:w-[170px] lg:h-[170px]">
                       <Image
                         src="/Professional.png"
                         alt="Kaushik R"
@@ -422,7 +429,7 @@ export default function Personal() {
                     </div>
 
                     {/* Hello Badge */}
-                    <div className="absolute bottom-3 -left-6">
+                    <div className="absolute bottom-2 -left-4 sm:bottom-3 sm:-left-6">
                       <div
                         className="hello-chip rounded-full px-3 py-1 flex items-center border-1 gap-1.5 cursor-pointer"
                         style={{ backgroundColor: '#fefefe' }}
@@ -437,13 +444,13 @@ export default function Personal() {
 
               {/* Name */}
               {!isPersonalMode && (
-                <h1 className={`font-medium tracking-wide ${beautyDemo.className} text-8xl lg:text-9xl`} style={{ color: '#0A7455', lineHeight: '1.0', marginTop: '24px', marginBottom: '18px' }}>
+                <h1 className={`font-medium tracking-wide ${beautyDemo.className} text-6xl sm:text-7xl lg:text-8xl xl:text-9xl`} style={{ color: '#0A7455', lineHeight: '1.0', marginTop: '16px', marginBottom: '12px' }}>
                   Kaushik
                 </h1>
               )}
 
               {/* Bio Text */}
-              <div className={`text-zinc-700 tracking-normal ${archivo.className} text-md lg:text-md`} style={{ fontSize: isPersonalMode ? 'clamp(16px, 3.5vw, 22px)' : 'clamp(14px, 2.5vw, 16px)', lineHeight: '1.7', marginTop: isPersonalMode ? '32px' : '8px', textAlign: 'center' }}>
+              <div className={`text-zinc-700 tracking-normal ${archivo.className} px-2 sm:px-4 lg:px-0`} style={{ fontSize: isPersonalMode ? 'clamp(16px, 3.5vw, 22px)' : 'clamp(13px, 2.2vw, 16px)', lineHeight: '1.6', marginTop: isPersonalMode ? '32px' : '8px', textAlign: 'center' }}>
                 {/* Dark mode: color: '#F3F4F6' instead of text-zinc-700 */}
                 {!isPersonalMode && (
                   <>
@@ -459,11 +466,11 @@ export default function Personal() {
 
               {/* Compact Experience Section */}
               {!isPersonalMode && (
-                <div style={{ marginTop: '28px' }}>
-                  <h3 className={`font-medium tracking-wide ${geistMono.className} text-sm`} style={{ color: '#6B7350', marginBottom: '24px' }}>
+                <div style={{ marginTop: '20px' }} className="sm:mt-7">
+                  <h3 className={`font-medium tracking-wide ${geistMono.className} text-xs sm:text-sm sm:mb-6`} style={{ color: '#6B7350', marginBottom: '16px' }}>
                     Career Journey
                   </h3>
-                  <div className="flex items-center justify-center">
+                  <div className="flex items-center justify-center overflow-x-auto px-2">
                     {WORK_EXPERIENCE.map((job) => (
                       <div key={job.id} className="flex items-center">
                         <div className="flex flex-col items-center">
@@ -496,15 +503,16 @@ export default function Personal() {
                               height={30}
                               unoptimized
                               className={`object-contain transition-all duration-200 ${job.company === 'Appian Corporation'
-                                ? 'mr-8'
+                                ? 'mr-4 sm:mr-8'
                                 : 'grayscale hover:grayscale-0'
                                 }
                             `}
-                              style={{ height: '30px' }}
+                              style={{ height: '24px' }}
                             />
                           </a>
-                          <div className={`text-xs text-gray-500 text-center ${job.company === 'Appian Corporation' ? 'mr-8' : 'mr-2'}`} style={{ marginTop: '6px' }}>
-                            {job.start} - {job.end}
+                          <div className={`text-xs text-gray-500 text-center sm:mt-1.5 ${job.company === 'Appian Corporation' ? 'mr-4 sm:mr-8' : 'mr-1 sm:mr-2'}`} style={{ marginTop: '4px' }}>
+                            <span className="hidden sm:inline">{job.start} - {job.end}</span>
+                            <span className="sm:hidden">{job.start.slice(-2)} - {job.end.slice(-2)}</span>
                           </div>
                         </div>
                       </div>
@@ -585,7 +593,7 @@ export default function Personal() {
 
           {/* Right Column - Works Content */}
           <div
-            className="w-full lg:w-[55%] flex flex-col px-6 pt-12 pb-16 lg:px-16 lg:pt-18 lg:pb-24 overflow-y-auto"
+            className="w-full xl:w-[55%] flex flex-col px-4 pt-8 pb-12 sm:px-6 sm:pt-12 sm:pb-16 lg:px-12 lg:pt-16 lg:pb-20 xl:px-16 xl:pt-18 xl:pb-24 overflow-y-auto max-h-screen"
           // Dark mode: style={{ backgroundColor: '#111111' }}
           >
             <motion.section
@@ -594,7 +602,7 @@ export default function Personal() {
               className="flex flex-col justify-start"
             >
               <div className="flex flex-col">
-                <div className="flex justify-center space-x-8" style={{ marginBottom: '28px' }}>
+                <div className="flex justify-center space-x-4 sm:space-x-8 sm:mb-7" style={{ marginBottom: '20px' }}>
                   <button
                     onClick={() => setActiveTab('case-studies')}
                     className={`pb-2 px-1 ${activeTab === 'case-studies' ? 'font-semibold' : 'font-medium'} tracking-wide ${geistMono.className} text-sm border-b-2 border-transparent transition-colors relative cursor-pointer ${activeTab !== 'case-studies' ? 'hover:text-gray-700 group' : ''}`}
@@ -654,10 +662,10 @@ export default function Personal() {
 
 
                 {/* Tab Content */}
-                <div style={{ marginTop: '24px' }}>
+                <div className="sm:mt-6" style={{ marginTop: '16px' }}>
                   {activeTab === 'case-studies' && (
                     <div className="relative">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                         {PROJECTS.map((project, index) => (
                           <div key={project.id} className="bg-white rounded-2xl border border-gray-200 flex flex-col h-full overflow-hidden">
                             {/* Thumbnail Image */}
@@ -756,7 +764,7 @@ export default function Personal() {
                       <div className={`text-center mb-8 -mt-2 text-gray-400 ${archivo.className}`} style={{ fontSize: '14px' }}>
                         A few visual highlights from my design work
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                         {VISUAL_SNIPPETS.map((snippet, index) => (
                           <div key={snippet.id} className="w-full h-auto bg-white border border-gray-200 overflow-hidden rounded-lg">
                             <Image

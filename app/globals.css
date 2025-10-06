@@ -110,7 +110,6 @@
 
 /* --- Wave Animation --- */
 @keyframes wave {
-
   0%,
   100% {
     transform: rotate(0deg);
@@ -129,6 +128,31 @@
   }
 }
 
+/* --- Slow Wave with Intervals --- */
+@keyframes slowWaveWithInterval {
+  0%,
+  85%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  5% {
+    transform: rotate(8deg);
+  }
+
+  10% {
+    transform: rotate(-8deg);
+  }
+
+  15% {
+    transform: rotate(8deg);
+  }
+
+  20% {
+    transform: rotate(0deg);
+  }
+}
+
 /* --- Hello Chip Hover Effects --- */
 .hello-chip {
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -143,6 +167,50 @@
   color: white !important;
 }
 
+/* Default slow wave animation */
+.wave-emoji {
+  animation: slowWaveWithInterval 4s ease-in-out infinite;
+}
+
+/* Faster wave on hover */
 .hello-chip:hover .wave-emoji {
   animation: wave 1.8s ease-in-out infinite;
+}
+
+/* --- Responsive Layout Fixes --- */
+@media (max-width: 1279px) {
+  /* For screens smaller than xl (1280px) */
+  .portfolio-main {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .portfolio-left-column {
+    width: 100%;
+    min-height: auto;
+    max-height: none;
+    overflow-y: visible;
+  }
+  
+  .portfolio-right-column {
+    width: 100%;
+    max-height: none;
+  }
+}
+
+@media (max-width: 640px) {
+  /* For mobile screens */
+  .portfolio-left-column {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+  
+  .portfolio-right-column {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+  }
 }
