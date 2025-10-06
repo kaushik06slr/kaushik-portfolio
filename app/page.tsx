@@ -104,6 +104,20 @@ export default function Personal() {
     return () => clearTimeout(timer)
   }, [])
 
+  // Prevent body scroll when loading screen is active
+  useEffect(() => {
+    if (isLoading) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isLoading])
+
 
 
   return (

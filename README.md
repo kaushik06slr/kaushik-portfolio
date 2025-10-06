@@ -63,7 +63,6 @@ To adapt this portfolio for your own use:
 - **LinkedIn:** [linkedin.com/in/kaushikslr](https://www.linkedin.com/in/kaushikslr)
 - **Instagram:** [@kaushikslr](https://www.instagram.com/kaushikslr)
 - **X (Twitter):** [@kaushik06slr](https://twitter.com/kaushik06slr)
-- **Resume:** [View Resume](https://drive.google.com/file/d/1O5uGDFgDURL7EGClXaPLLWuXSis-Uagf/view?usp=drive_link)
 
 ## 🚀 Deployment
 
@@ -72,9 +71,3 @@ Deploy to Vercel with one click:
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fkaushik06slr%2Fkaushik-portfolio)
 
 Or deploy to any platform that supports Next.js applications.
-
----
-
-**Designed with love ❤️, Co-built with Claude 🤖**
-
-*This portfolio showcases the intersection of thoughtful design and technical implementation, reflecting my approach to creating user-centered digital experiences.*
