@@ -24,6 +24,37 @@ const beautyDemo = localFont({
   src: './fonts/BeautyDemo.otf',
   display: 'swap',
 });
+
+const mirage = localFont({
+  src: [
+    {
+      path: './fonts/made_mirage/MADE Mirage Thin PERSONAL USE.otf',
+      weight: '100',
+      style: 'normal',
+    },
+    {
+      path: './fonts/made_mirage/MADE Mirage Regular PERSONAL USE.otf',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: './fonts/made_mirage/MADE Mirage Medium PERSONAL USE.otf',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: './fonts/made_mirage/MADE Mirage Bold PERSONAL USE.otf',
+      weight: '700',
+      style: 'normal',
+    },
+    {
+      path: './fonts/made_mirage/MADE Mirage Black PERSONAL USE.otf',
+      weight: '900',
+      style: 'normal',
+    },
+  ],
+  display: 'swap',
+});
 const VARIANTS_CONTAINER = {
   hidden: { opacity: 1 },
   visible: {
@@ -427,10 +458,10 @@ export default function Personal() {
               <div>
                 {/* Title */}
                 <div className="mb-6 lg:mb-8">
-                  <h1 className={`text-3xl sm:text-3xl lg:text-3xl ${dmSans.className} mb-2`}>
-                    <span className="font-normal text-zinc-500">Hey! I'm </span>
+                  <h1 className={`text-4xl sm:text-4xl tracking-normal lg:text-4xl ${mirage.className} mb-2`}>
+                    <span className="font-bold" style={{ color: '#0A7455' }}>Hey! I'm </span>
                     <span className="font-bold" style={{ color: '#0A7455' }}>Kaushik</span>
-                    <span className="font-normal text-zinc-700"> ✨</span>
+                    <span className="font-medium text-zinc-700"> ✨</span>
                   </h1>
                 </div>
 
@@ -487,7 +518,7 @@ export default function Personal() {
                           href={link.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className={`${dmSans.className} text-zinc-600 hover:text-[#0A7455] hover:font-medium transition-all duration-200 flex items-center gap-2 text-sm`}
+                          className={`${dmSans.className} text-zinc-600 hover:text-[#0A7455] hover:font-medium transition-all duration-200 flex items-center gap-2 text-md`}
                         >
                           {link.label}
                           <svg
@@ -1135,9 +1166,9 @@ export default function Personal() {
                 transition={{ duration: 0.5, ease: "easeOut" }}
               >
                 <motion.div
-                  className="text-5xl"
+                  className="text-7xl"
                   style={{
-                    color: '#0A7455',
+                    color: '#28AF87',
                     transformOrigin: 'center center'
                   }}
                   animate={{ rotate: 360 }}
@@ -1153,14 +1184,14 @@ export default function Personal() {
 
               {/* Loading Text */}
               <motion.div
-                className={`text-center ${dmSans.className}`}
+                className={`text-center ${mirage.className}`}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
               >
-                <div className="text-3xl font-medium" style={{ color: '#0A7455' }}>
-                  Making things pop, tastefully
+                <div className="text-5xl font-medium tracking-wide" style={{ color: '#28AF87' }}>
+                  Making things <span className="font-bold bg-gradient-to-r from-teal-500 via-emerald-600 to-green-700 bg-clip-text text-transparent">pop</span>, tastefully
                 </div>
               </motion.div>
             </div>
