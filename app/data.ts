@@ -46,6 +46,7 @@ export const PROJECTS: Project[] = [
     company: 'Appian',
     year: '2025',
     status: 'Shipped',
+    caseStudyLink: 'https://docs.google.com/presentation/d/1uWMV1TfPfOMNiV27hI8OEZ0uzrIDWbkxG-IUzbhP-Ro/edit?usp=sharing',
   },
   {
     name: 'Real-Time Data Streaming with Appian Kafka Integration',
@@ -68,6 +69,7 @@ export const PROJECTS: Project[] = [
     company: 'Appian',
     year: '2024',
     status: 'Shipped',
+    caseStudyLink: '#', // Add your case study link here
   },
   {
     name: 'FIGARO: Centralized Loan Post-Closing Platform',

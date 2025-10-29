@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'motion/react'
 import Image from 'next/image';
 
@@ -89,13 +90,21 @@ const TRANSITION_SECTION = {
 
 
 export default function Personal() {
+  const searchParams = useSearchParams()
+  const isUnlockMode = searchParams.get('unlocked') === 'true'
+
   const [isPersonalMode, setIsPersonalMode] = useState(false)
   const [activeTab, setActiveTab] = useState('case-studies')
   const [isLoading, setIsLoading] = useState(true)
   const [enlargedImage, setEnlargedImage] = useState<string | null>(null)
   const [tooltip, setTooltip] = useState({ show: false, x: 0, y: 0 })
-  const [caseStudyTooltip, setCaseStudyTooltip] = useState({ show: false, x: 0, y: 0 })
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  // Filter projects based on unlock mode
+  const filteredProjects = isUnlockMode
+    ? PROJECTS.filter(project => project.id !== 'project2') // Hide Kafka project
+    : PROJECTS
 
   // Navigation functions for image modal
   const navigateImage = (direction: 'prev' | 'next') => {
@@ -870,7 +879,7 @@ export default function Personal() {
                   {activeTab === 'case-studies' && (
                     <div className="relative">
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-                        {PROJECTS.map((project, index) => (
+                        {filteredProjects.map((project, index) => (
                           <div key={project.id} className="bg-white rounded-2xl border border-gray-200 flex flex-col h-full overflow-hidden">
                             {/* Thumbnail Image */}
                             <div className="w-full h-48 overflow-hidden">
@@ -914,17 +923,6 @@ export default function Personal() {
                                     rel="noopener noreferrer"
                                     className={`transition-colors duration-200 hover:underline ${dmSans.className} inline-block`}
                                     style={{ color: '#0A7455', fontSize: '16px' }}
-                                    onMouseEnter={(e) => {
-                                      if (index < 3) { // Only show tooltip for first 3 cards
-                                        setCaseStudyTooltip({ show: true, x: e.clientX, y: e.clientY })
-                                      }
-                                    }}
-                                    onMouseLeave={() => setCaseStudyTooltip({ show: false, x: 0, y: 0 })}
-                                    onMouseMove={(e) => {
-                                      if (index < 3) {
-                                        setCaseStudyTooltip({ show: true, x: e.clientX, y: e.clientY })
-                                      }
-                                    }}
                                   >
                                     View Case Study
                                   </a>
@@ -932,17 +930,6 @@ export default function Personal() {
                                   <span
                                     className={`text-gray-400 ${dmSans.className} inline-flex items-center gap-1`}
                                     style={{ fontSize: '16px' }}
-                                    onMouseEnter={(e) => {
-                                      if (index < 3) { // Only show tooltip for first 3 cards
-                                        setCaseStudyTooltip({ show: true, x: e.clientX, y: e.clientY })
-                                      }
-                                    }}
-                                    onMouseLeave={() => setCaseStudyTooltip({ show: false, x: 0, y: 0 })}
-                                    onMouseMove={(e) => {
-                                      if (index < 3) {
-                                        setCaseStudyTooltip({ show: true, x: e.clientX, y: e.clientY })
-                                      }
-                                    }}
                                   >
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                       <path d="M6 10V8C6 5.79086 7.79086 4 10 4H14C16.2091 4 18 5.79086 18 8V10M5 10H19C19.5523 10 20 10.4477 20 11V19C20 19.5523 19.5523 20 19 20H5C4.44772 20 4 19.5523 4 19V11C4 10.4477 4.44772 10 5 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -1043,19 +1030,7 @@ export default function Personal() {
         </div>
       )}
 
-      {/* Case Study Tooltip */}
-      {caseStudyTooltip.show && (
-        <div
-          className="fixed z-40 pointer-events-none text-white text-xs px-3 py-2 rounded-full"
-          style={{
-            backgroundColor: '#0A7455',
-            left: caseStudyTooltip.x - 50,
-            top: caseStudyTooltip.y + 20,
-          }}
-        >
-          Let's Connect
-        </div>
-      )}
+
 
       {/* Image Modal */}
       <AnimatePresence>
