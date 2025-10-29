@@ -98,6 +98,7 @@ function PersonalContent() {
   const [isLoading, setIsLoading] = useState(true)
   const [enlargedImage, setEnlargedImage] = useState<string | null>(null)
   const [tooltip, setTooltip] = useState({ show: false, x: 0, y: 0 })
+  const [caseStudyTooltip, setCaseStudyTooltip] = useState({ show: false, x: 0, y: 0 })
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
@@ -920,7 +921,8 @@ function PersonalContent() {
                                   <a
                                     href={
                                       project.caseStudyLink ||
-                                      (project.id === 'project1' ? 'https://docs.google.com/presentation/d/1uWMV1TfPfOMNiV27hI8OEZ0uzrIDWbkxG-IUzbhP-Ro/edit?usp=sharing' : '#')
+                                      (project.id === 'project1' ? 'https://docs.google.com/presentation/d/1uWMV1TfPfOMNiV27hI8OEZ0uzrIDWbkxG-IUzbhP-Ro/edit?usp=sharing' :
+                                        project.id === 'project3' ? 'https://docs.google.com/presentation/d/1yguG4h02B5L8R3SVlvGWrbVKxSdLs_DRTDJiWLHEzgU/edit?slide=id.g256bdb01467_0_396#slide=id.g256bdb01467_0_396' : '#')
                                     }
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -933,6 +935,17 @@ function PersonalContent() {
                                   <span
                                     className={`text-gray-400 ${dmSans.className} inline-flex items-center gap-1`}
                                     style={{ fontSize: '16px' }}
+                                    onMouseEnter={(e) => {
+                                      if (!isUnlockMode) { // Only show tooltip in normal mode
+                                        setCaseStudyTooltip({ show: true, x: e.clientX, y: e.clientY })
+                                      }
+                                    }}
+                                    onMouseLeave={() => setCaseStudyTooltip({ show: false, x: 0, y: 0 })}
+                                    onMouseMove={(e) => {
+                                      if (!isUnlockMode) {
+                                        setCaseStudyTooltip({ show: true, x: e.clientX, y: e.clientY })
+                                      }
+                                    }}
                                   >
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                       <path d="M6 10V8C6 5.79086 7.79086 4 10 4H14C16.2091 4 18 5.79086 18 8V10M5 10H19C19.5523 10 20 10.4477 20 11V19C20 19.5523 19.5523 20 19 20H5C4.44772 20 4 19.5523 4 19V11C4 10.4477 4.44772 10 5 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -1030,6 +1043,20 @@ function PersonalContent() {
           }}
         >
           Click to enlarge
+        </div>
+      )}
+
+      {/* Case Study Tooltip */}
+      {caseStudyTooltip.show && (
+        <div
+          className="fixed z-40 pointer-events-none text-white text-xs px-3 py-2 rounded-full"
+          style={{
+            backgroundColor: '#0A7455',
+            left: caseStudyTooltip.x - 50,
+            top: caseStudyTooltip.y + 20,
+          }}
+        >
+          Let's Connect
         </div>
       )}
 
