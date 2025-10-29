@@ -916,9 +916,12 @@ function PersonalContent() {
 
                               {/* Action Links */}
                               <div className="flex items-center mt-auto">
-                                {project.caseStudyLink ? (
+                                {(project.caseStudyLink || (isUnlockMode && (project.id === 'project1' || project.id === 'project3'))) ? (
                                   <a
-                                    href={project.caseStudyLink}
+                                    href={
+                                      project.caseStudyLink ||
+                                      (project.id === 'project1' ? 'https://docs.google.com/presentation/d/1uWMV1TfPfOMNiV27hI8OEZ0uzrIDWbkxG-IUzbhP-Ro/edit?usp=sharing' : '#')
+                                    }
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className={`transition-colors duration-200 hover:underline ${dmSans.className} inline-block`}
